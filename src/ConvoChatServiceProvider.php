@@ -50,7 +50,7 @@ class ConvoChatServiceProvider extends ServiceProvider
             ], 'convochat-config');
 
             $this->commands([
-                // Future: Add Artisan commands here
+                \ConvoChat\LaravelSmsGateway\Console\TestConvoChatCommand::class,
             ]);
         }
     }
