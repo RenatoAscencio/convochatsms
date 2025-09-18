@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025-09-18
+
+### 🔧 Fixed
+
+- **Logger null-safe calls**: Agregado operador null-safe (?->) a llamadas logger() en SendBulkSmsJob y ConvoChatCache
+- **PHPStan Level 8 compliance**: Eliminados todos los errores de análisis estático relacionados con logger()
+- **GitHub Actions stability**: Estabilizada matriz de CI con combinaciones confiables de PHP/Laravel
+
+### 🔄 Changed
+
+- **Laravel 11 support**: Temporalmente removido soporte para Laravel 11 debido a incompatibilidades de dependencias
+- **Supported Laravel versions**: Ahora soporta Laravel 8.x, 9.x, 10.x (matriz estable y probada)
+- **CI/CD matrix**: Reducida a 9 combinaciones bien probadas para mayor confiabilidad
+
+### 📚 Documentation
+
+- **README badges**: Agregados badges de versiones PHP y Laravel soportadas
+- **Test status badge**: Agregado badge dinámico del estado de GitHub Actions
+- **Version accuracy**: Badges ahora reflejan las versiones realmente soportadas
+
+### 🛡️ Quality Assurance
+
+- **100% test success**: 41/41 tests pasando en todas las combinaciones soportadas
+- **PHPStan Level 8**: Análisis estático sin errores
+- **Stable CI pipeline**: GitHub Actions ejecutándose consistentemente sin fallos
+
+---
+
 ## [1.1.0] - 2024-09-17
 
 ### ✨ Added
