@@ -11,10 +11,15 @@ use Illuminate\Queue\SerializesModels;
 
 class SendBulkSmsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
 
-    public $tries = 3;
-    public $backoff = [30, 60, 120];
+    public int $tries = 3;
+
+    /** @var array<int> */
+    public array $backoff = [30, 60, 120];
 
     public function __construct(
         private array $recipients,

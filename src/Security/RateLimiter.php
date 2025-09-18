@@ -22,13 +22,16 @@ class RateLimiter
 
     public function tooManyAttempts(string $key, int $maxAttempts = 60): bool
     {
-        return !$this->attempt($key, $maxAttempts, 0);
+        $cacheKey = "rate_limit:{$key}";
+        $attempts = Cache::get($cacheKey, 0);
+
+        return $attempts >= $maxAttempts;
     }
 
     public function remaining(string $key, int $maxAttempts = 60): int
     {
         $cacheKey = "rate_limit:{$key}";
-        $attempts = Cache::get($cacheKey, 0);
+        $attempts = (int) Cache::get($cacheKey, 0);
 
         return max(0, $maxAttempts - $attempts);
     }
