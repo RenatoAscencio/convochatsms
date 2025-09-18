@@ -35,18 +35,9 @@ jobs:
           - php: 8.2
             laravel: 10.*
             testbench: ^8.0
-          - php: 8.2
-            laravel: 11.*
-            testbench: ^9.0
           - php: 8.3
             laravel: 10.*
             testbench: ^8.0
-          - php: 8.3
-            laravel: 11.*
-            testbench: ^9.0
-          - php: 8.4
-            laravel: 11.*
-            testbench: ^9.0
 
     name: PHP ${{ matrix.php }} - Laravel ${{ matrix.laravel }}
 
