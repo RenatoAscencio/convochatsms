@@ -11,6 +11,8 @@
 
 Un paquete Laravel moderno y robusto para integración completa con ConvoChat API para envío de SMS y WhatsApp con soporte para múltiples modos, configuración avanzada y monitoreo.
 
+[![Status de Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
+
 ## 🚀 Instalación
 
 ```bash
