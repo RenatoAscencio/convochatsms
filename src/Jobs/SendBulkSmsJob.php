@@ -48,7 +48,7 @@ class SendBulkSmsJob implements ShouldQueue
                 }
 
                 if ($result['status'] !== 'success') {
-                    logger()->warning("Failed to send SMS to {$phone}", ['result' => $result]);
+                    logger()?->warning("Failed to send SMS to {$phone}", ['result' => $result]);
                 }
 
                 // Rate limiting entre mensajes
@@ -57,7 +57,7 @@ class SendBulkSmsJob implements ShouldQueue
                 }
 
             } catch (\Exception $e) {
-                logger()->error("SMS job failed for {$phone}: " . $e->getMessage());
+                logger()?->error("SMS job failed for {$phone}: " . $e->getMessage());
 
                 // Re-encolar mensaje fallido
                 if ($this->attempts() < $this->tries) {

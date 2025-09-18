@@ -55,7 +55,7 @@ class ConvoChatCache
             });
         } catch (\Exception $e) {
             // Silenciar errores durante el warming
-            logger()->warning('ConvoChat cache warming failed: ' . $e->getMessage());
+            logger()?->warning('ConvoChat cache warming failed: ' . $e->getMessage());
         }
     }
 }
