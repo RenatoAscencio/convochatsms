@@ -35,7 +35,7 @@ return [
     |
     */
 
-    'timeout' => env('CONVOCHAT_TIMEOUT', 30),
+    'timeout' => (int) env('CONVOCHAT_TIMEOUT', 30),
 
     /*
     |--------------------------------------------------------------------------

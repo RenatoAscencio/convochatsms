@@ -19,44 +19,40 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->whatsappService = app(ConvoChatWhatsAppService::class);
     }
 
-    /** @test */
-    public function it_can_be_instantiated()
+    public function testItCanBeInstantiated()
     {
         $this->assertInstanceOf(ConvoChatWhatsAppService::class, $this->whatsappService);
     }
 
-    /** @test */
-    public function it_validates_required_account_parameter()
+    public function testItValidatesRequiredAccountParameter()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing required parameter: account');
 
         $this->whatsappService->sendMessage([
             'recipient' => '+573001234567',
-            'message' => 'Test message'
+            'message' => 'Test message',
         ]);
     }
 
-    /** @test */
-    public function it_validates_required_recipient_parameter()
+    public function testItValidatesRequiredRecipientParameter()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing required parameter: recipient');
 
         $this->whatsappService->sendMessage([
             'account' => 'account123',
-            'message' => 'Test message'
+            'message' => 'Test message',
         ]);
     }
 
-    /** @test */
-    public function it_can_send_text_message()
+    public function testItCanSendTextMessage()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
-                'message' => 'WhatsApp message sent'
-            ]))
+                'message' => 'WhatsApp message sent',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -77,14 +73,13 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertEquals('WhatsApp message sent', $result['message']);
     }
 
-    /** @test */
-    public function it_can_send_media_message()
+    public function testItCanSendMediaMessage()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
-                'message' => 'Media sent successfully'
-            ]))
+                'message' => 'Media sent successfully',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -106,14 +101,13 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertEquals('success', $result['status']);
     }
 
-    /** @test */
-    public function it_can_send_document()
+    public function testItCanSendDocument()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
-                'message' => 'Document sent successfully'
-            ]))
+                'message' => 'Document sent successfully',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -136,17 +130,16 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertEquals('success', $result['status']);
     }
 
-    /** @test */
-    public function it_can_get_whatsapp_servers()
+    public function testItCanGetWhatsappServers()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'servers' => [
                     ['id' => 1, 'name' => 'Server 1'],
-                    ['id' => 2, 'name' => 'Server 2']
-                ]
-            ]))
+                    ['id' => 2, 'name' => 'Server 2'],
+                ],
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -163,15 +156,14 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertCount(2, $result['servers']);
     }
 
-    /** @test */
-    public function it_can_link_whatsapp_account()
+    public function testItCanLinkWhatsappAccount()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'token' => 'abc123',
-                'qr_code' => 'data:image/png;base64,iVBOR...'
-            ]))
+                'qr_code' => 'data:image/png;base64,iVBOR...',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -189,15 +181,14 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertArrayHasKey('qr_code', $result);
     }
 
-    /** @test */
-    public function it_can_validate_whatsapp_number()
+    public function testItCanValidateWhatsappNumber()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'valid' => true,
-                'formatted' => '+573001234567'
-            ]))
+                'formatted' => '+573001234567',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -217,17 +208,16 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertTrue($result['valid']);
     }
 
-    /** @test */
-    public function it_can_get_whatsapp_accounts()
+    public function testItCanGetWhatsappAccounts()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'accounts' => [
                     ['unique' => 'acc1', 'phone' => '+573001111111'],
-                    ['unique' => 'acc2', 'phone' => '+573002222222']
-                ]
-            ]))
+                    ['unique' => 'acc2', 'phone' => '+573002222222'],
+                ],
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);

@@ -22,8 +22,9 @@ class TestConvoChatCommand extends Command
         $this->info('🚀 ConvoChat Laravel Gateway Test Tool');
         $this->info('=====================================');
 
-        if (!config('convochat.api_key')) {
+        if (! config('convochat.api_key')) {
             $this->error('❌ API Key not configured. Add CONVOCHAT_API_KEY to your .env file');
+
             return 1;
         }
 
@@ -150,12 +151,13 @@ class TestConvoChatCommand extends Command
         $phone = $this->option('phone');
         $device = $this->option('device');
 
-        if (!$phone) {
+        if (! $phone) {
             $phone = $this->ask('Enter phone number (E.164 format, e.g., +573001234567)');
         }
 
-        if (!$phone) {
+        if (! $phone) {
             $this->error('❌ Phone number is required for SMS testing');
+
             return;
         }
 
@@ -194,16 +196,17 @@ class TestConvoChatCommand extends Command
         $phone = $this->option('phone');
         $account = $this->option('account');
 
-        if (!$phone) {
+        if (! $phone) {
             $phone = $this->ask('Enter phone number (E.164 format, e.g., +573001234567)');
         }
 
-        if (!$account) {
+        if (! $account) {
             $account = $this->ask('Enter WhatsApp account ID');
         }
 
-        if (!$phone || !$account) {
+        if (! $phone || ! $account) {
             $this->error('❌ Phone number and account ID are required for WhatsApp testing');
+
             return;
         }
 

@@ -9,24 +9,21 @@ use ConvoChat\LaravelSmsGateway\Tests\TestCase;
 
 class FacadeTest extends TestCase
 {
-    /** @test */
-    public function facade_returns_sms_service()
+    public function testFacadeReturnsSmsService()
     {
         $smsService = ConvoChat::sms();
 
         $this->assertInstanceOf(ConvoChatSmsService::class, $smsService);
     }
 
-    /** @test */
-    public function facade_returns_whatsapp_service()
+    public function testFacadeReturnsWhatsappService()
     {
         $whatsappService = ConvoChat::whatsapp();
 
         $this->assertInstanceOf(ConvoChatWhatsAppService::class, $whatsappService);
     }
 
-    /** @test */
-    public function facade_returns_same_instance_on_multiple_calls()
+    public function testFacadeReturnsSameInstanceOnMultipleCalls()
     {
         $sms1 = ConvoChat::sms();
         $sms2 = ConvoChat::sms();
@@ -34,8 +31,7 @@ class FacadeTest extends TestCase
         $this->assertSame($sms1, $sms2);
     }
 
-    /** @test */
-    public function facade_can_access_sms_methods()
+    public function testFacadeCanAccessSmsMethods()
     {
         $smsService = ConvoChat::sms();
 
@@ -45,8 +41,7 @@ class FacadeTest extends TestCase
         $this->assertTrue(method_exists($smsService, 'getDevices'));
     }
 
-    /** @test */
-    public function facade_can_access_whatsapp_methods()
+    public function testFacadeCanAccessWhatsappMethods()
     {
         $whatsappService = ConvoChat::whatsapp();
 

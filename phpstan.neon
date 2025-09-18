@@ -1,0 +1,15 @@
+parameters:
+    level: 8
+    paths:
+        - src
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\Contracts\\Foundation\\Application::#'
+        - identifier: missingType.iterableValue
+        - identifier: missingType.generics
+        - '#Parameter \#1 \$app of method.*__construct\(\) has no type specified#'
+        - '#Property.*\$app has no type specified#'
+        - '#Method.*__construct\(\) has parameter \$app with no type specified#'
+    excludePaths:
+        - vendor
+        - src/Console
+    reportUnmatchedIgnoredErrors: false

@@ -3,7 +3,8 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          bootstrap="vendor/autoload.php"
          colors="true"
-         verbose="true">
+         verbose="true"
+         testdox="true">
     <testsuites>
         <testsuite name="ConvoChat Laravel SMS Gateway Test Suite">
             <directory>tests</directory>

@@ -8,7 +8,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Response;
-use Mockery;
 
 class ConvoChatSmsServiceTest extends TestCase
 {
@@ -20,14 +19,12 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->smsService = app(ConvoChatSmsService::class);
     }
 
-    /** @test */
-    public function it_can_be_instantiated()
+    public function testItCanBeInstantiated()
     {
         $this->assertInstanceOf(ConvoChatSmsService::class, $this->smsService);
     }
 
-    /** @test */
-    public function it_validates_required_phone_parameter()
+    public function testItValidatesRequiredPhoneParameter()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing required parameter: phone');
@@ -35,8 +32,7 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->smsService->sendSms(['message' => 'Test message']);
     }
 
-    /** @test */
-    public function it_validates_required_message_parameter()
+    public function testItValidatesRequiredMessageParameter()
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Missing required parameter: message');
@@ -44,14 +40,13 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->smsService->sendSms(['phone' => '+573001234567']);
     }
 
-    /** @test */
-    public function it_builds_correct_params_for_device_mode()
+    public function testItBuildsCorrectParamsForDeviceMode()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
-                'message' => 'SMS sent successfully'
-            ]))
+                'message' => 'SMS sent successfully',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -74,14 +69,13 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->assertEquals('SMS sent successfully', $result['message']);
     }
 
-    /** @test */
-    public function it_builds_correct_params_for_credits_mode()
+    public function testItBuildsCorrectParamsForCreditsMode()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
-                'message' => 'SMS sent via credits'
-            ]))
+                'message' => 'SMS sent via credits',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -101,17 +95,16 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->assertEquals('success', $result['status']);
     }
 
-    /** @test */
-    public function it_can_get_devices_list()
+    public function testItCanGetDevicesList()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'devices' => [
                     ['id' => 'device1', 'name' => 'Android 1'],
-                    ['id' => 'device2', 'name' => 'Android 2']
-                ]
-            ]))
+                    ['id' => 'device2', 'name' => 'Android 2'],
+                ],
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -128,15 +121,14 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->assertCount(2, $result['devices']);
     }
 
-    /** @test */
-    public function it_can_get_credits_balance()
+    public function testItCanGetCreditsBalance()
     {
         $mock = new MockHandler([
             new Response(200, [], json_encode([
                 'status' => 'success',
                 'credits' => 100,
-                'currency' => 'USD'
-            ]))
+                'currency' => 'USD',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -153,14 +145,13 @@ class ConvoChatSmsServiceTest extends TestCase
         $this->assertEquals(100, $result['credits']);
     }
 
-    /** @test */
-    public function it_handles_api_errors_gracefully()
+    public function testItHandlesApiErrorsGracefully()
     {
         $mock = new MockHandler([
             new Response(400, [], json_encode([
                 'status' => 'error',
-                'message' => 'Invalid API key'
-            ]))
+                'message' => 'Invalid API key',
+            ])),
         ]);
 
         $handlerStack = HandlerStack::create($mock);
@@ -171,9 +162,9 @@ class ConvoChatSmsServiceTest extends TestCase
         $clientProperty->setAccessible(true);
         $clientProperty->setValue($this->smsService, $client);
 
-        $result = $this->smsService->getDevices();
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('ConvoChat SMS API Error:');
 
-        $this->assertEquals('error', $result['status']);
-        $this->assertEquals('Invalid API key', $result['message']);
+        $this->smsService->getDevices();
     }
 }

@@ -21,7 +21,7 @@ class ConvoChatServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('convochat', function ($app) {
-            return new class($app) {
+            return new class ($app) {
                 protected $app;
 
                 public function __construct($app)
@@ -42,7 +42,7 @@ class ConvoChatServiceProvider extends ServiceProvider
         });
     }
 
-    public function boot()
+    public function boot(): void
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
