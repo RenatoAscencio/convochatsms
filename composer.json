@@ -1,5 +1,5 @@
 {
-    "name": "convochatsms/laravel-sms-gateway",
+    "name": "convochatsms/laravel-sms-whatsapp-gateway",
     "description": "Laravel package for ConvoChat SMS and WhatsApp gateway integration",
     "keywords": ["laravel", "sms", "whatsapp", "notifications", "convochat", "gateway"],
     "homepage": "https://github.com/RenatoAscencio/convochatsms",
