@@ -1,8 +1,8 @@
 # ConvoChat Laravel SMS Gateway
 
-[![Latest Version](https://img.shields.io/packagist/v/renatoascencio/convochatsms.svg?style=flat-square)](https://packagist.org/packages/renatoascencio/convochatsms)
-[![Total Downloads](https://img.shields.io/packagist/dt/renatoascencio/convochatsms.svg?style=flat-square)](https://packagist.org/packages/renatoascencio/convochatsms)
-[![License](https://img.shields.io/packagist/l/renatoascencio/convochatsms.svg?style=flat-square)](https://packagist.org/packages/renatoascencio/convochatsms)
+[![Latest Version](https://img.shields.io/packagist/v/convochatsms/laravel-sms-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-gateway)
+[![Total Downloads](https://img.shields.io/packagist/dt/convochatsms/laravel-sms-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-gateway)
+[![License](https://img.shields.io/packagist/l/convochatsms/laravel-sms-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-gateway)
 [![Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
 [![Coverage](https://codecov.io/gh/RenatoAscencio/convochatsms/branch/main/graph/badge.svg)](https://codecov.io/gh/RenatoAscencio/convochatsms)
 [![PHPStan Level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://phpstan.org/)
@@ -16,7 +16,7 @@ Un paquete Laravel moderno y robusto para integración completa con ConvoChat AP
 ## 🚀 Instalación
 
 ```bash
-composer require renatoascencio/convochatsms
+composer require convochatsms/laravel-sms-gateway
 ```
 
 ### Publicar configuración
