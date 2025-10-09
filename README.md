@@ -6,8 +6,8 @@
 [![Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
 [![Coverage](https://codecov.io/gh/RenatoAscencio/convochatsms/branch/main/graph/badge.svg)](https://codecov.io/gh/RenatoAscencio/convochatsms)
 [![PHPStan Level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://phpstan.org/)
-[![PHP Versions](https://img.shields.io/badge/PHP-8.0%20%7C%208.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg?style=flat-square)](https://php.net/)
-[![Laravel Versions](https://img.shields.io/badge/Laravel-8%20%7C%209%20%7C%2010-red.svg?style=flat-square)](https://laravel.com/)
+[![PHP Versions](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg?style=flat-square)](https://php.net/)
+[![Laravel Versions](https://img.shields.io/badge/Laravel-9%20%7C%2010%20%7C%2011%20%7C%2012-red.svg?style=flat-square)](https://laravel.com/)
 
 Un paquete Laravel moderno y robusto para integración completa con ConvoChat API para envío de SMS y WhatsApp con soporte para múltiples modos, configuración avanzada y monitoreo.
 
@@ -1942,10 +1942,19 @@ class EncryptedMessageService
 
 ## 📋 Requisitos
 
-- PHP 8.0+
-- Laravel 8.0+
+- PHP 8.1 - 8.4
+- Laravel 9.x | 10.x | 11.x | 12.x
 - Guzzle HTTP 7.0+
 - API Key válida de ConvoChat
+
+### Compatibilidad de Versiones
+
+| Laravel | PHP        | Testbench  |
+|---------|------------|------------|
+| 9.x     | 8.1 - 8.2  | ^7.0       |
+| 10.x    | 8.1 - 8.3  | ^8.0       |
+| 11.x    | 8.2 - 8.4  | ^9.0       |
+| 12.x    | 8.2 - 8.4  | ^10.0      |
 
 ## 📞 Soporte
 

@@ -5,6 +5,56 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### ✨ Added
+
+- **Laravel 12 support**: Agregado soporte completo para Laravel 12.x
+- **Laravel 11 support**: Agregado soporte completo para Laravel 11.x
+- **PHP 8.4 support**: Compatibilidad completa con PHP 8.4
+- **Claude Code integration**:
+  - Agentes especializados: `laravel-package-expert`, `php-testing-expert`, `api-integration-specialist`
+  - Comandos slash personalizados: `/test`, `/fix`, `/release`, `/docs`, `/new-feature`
+  - CLAUDE.md: Guía completa para asistentes IA
+- **VSCode configuration**:
+  - Configuración compartida del workspace
+  - Extensiones recomendadas para desarrollo PHP/Laravel
+  - Tasks automatizadas para tests y análisis
+  - Snippets personalizados del proyecto
+- **Compatibility matrix**: Tabla de compatibilidad detallada en documentación
+
+### 🔄 Changed
+
+- **Minimum PHP version**: Actualizado de 8.0 a 8.1
+- **Dropped Laravel 8.x support**: Laravel 8 ya no es soportado (EOL)
+- **Updated dependencies**:
+  - `illuminate/support`: ^9.0|^10.0|^11.0|^12.0 (anteriormente ^8.0|^9.0|^10.0)
+  - `phpunit/phpunit`: ^10.0|^11.0 (anteriormente ^9.5|^10.0|^11.0)
+  - `orchestra/testbench`: ^7.0|^8.0|^9.0|^10.0 (añadidos v9 y v10)
+  - `mockery/mockery`: ^1.6 (actualizado desde ^1.4)
+- **GitHub Actions matrix**: Actualizada para incluir Laravel 11 y 12 con todas las combinaciones de PHP
+
+### 📚 Documentation
+
+- **README.md**: Actualizado con versiones PHP 8.1-8.4 y Laravel 9-12
+- **CLAUDE.md**: Documentación completa de agentes y comandos Claude Code
+- **Compatibility matrix**: Tabla detallada de versiones soportadas
+- **.vscode/README.md**: Documentación de configuración VSCode
+- **.claude/README.md**: Documentación de agentes y comandos
+
+### 🧪 Testing
+
+- **CI/CD expansion**: Tests en 12 combinaciones de PHP/Laravel (anteriormente 9)
+- **Laravel 11.x testing**: PHP 8.2, 8.3, 8.4 con Testbench ^9.0
+- **Laravel 12.x testing**: PHP 8.2, 8.3, 8.4 con Testbench ^10.0
+
+### 🗑️ Removed
+
+- **Laravel 8.x support**: Eliminado soporte para Laravel 8 (EOL)
+- **PHP 8.0 support**: Eliminado soporte para PHP 8.0
+
+---
+
 ## [1.1.1] - 2025-09-18
 
 ### 🔧 Fixed

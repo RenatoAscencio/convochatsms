@@ -17,12 +17,21 @@ Este es un paquete Laravel moderno y robusto que proporciona integración comple
 
 ## Requisitos del Sistema
 
-- **PHP:** 8.0 o superior
-- **Laravel:** 8.0, 9.0, 10.0 o superior
+- **PHP:** 8.1 - 8.4
+- **Laravel:** 9.x, 10.x, 11.x, 12.x
 - **Dependencias principales:**
-  - `illuminate/support`: ^8.0|^9.0|^10.0
+  - `illuminate/support`: ^9.0|^10.0|^11.0|^12.0
   - `guzzlehttp/guzzle`: ^7.0
 - **API Key válida de ConvoChat:** Se obtiene desde https://sms.convo.chat/dashboard/tools/keys
+
+### Matriz de Compatibilidad
+
+| Laravel | PHP        | Orchestra Testbench | PHPUnit  |
+|---------|------------|---------------------|----------|
+| 9.x     | 8.1 - 8.2  | ^7.0                | ^10.0    |
+| 10.x    | 8.1 - 8.3  | ^8.0                | ^10.0    |
+| 11.x    | 8.2 - 8.4  | ^9.0                | ^10.0-11.0 |
+| 12.x    | 8.2 - 8.4  | ^10.0               | ^10.0-11.0 |
 
 ## Estructura del Proyecto
 
@@ -440,8 +449,8 @@ Log::error('ConvoChat SMS API Error', [
 
 ### GitHub Actions ([.github/workflows/tests.yml](.github/workflows/tests.yml))
 
-- **Tests automáticos** en PHP 8.0, 8.1, 8.2, 8.3, 8.4
-- **Laravel versions:** 8.x, 9.x, 10.x
+- **Tests automáticos** en PHP 8.1, 8.2, 8.3, 8.4
+- **Laravel versions:** 9.x, 10.x, 11.x, 12.x
 - **PHPStan** nivel 8 en pipeline
 - **PHP CS Fixer** validación
 - **Coverage reports** (si está configurado)
@@ -451,7 +460,8 @@ Log::error('ConvoChat SMS API Error', [
 ```markdown
 [![Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)]
 [![PHPStan Level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg)]
-[![PHP Versions](https://img.shields.io/badge/PHP-8.0%20%7C%208.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg)]
+[![PHP Versions](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg)]
+[![Laravel Versions](https://img.shields.io/badge/Laravel-9%20%7C%2010%20%7C%2011%20%7C%2012-red.svg)]
 ```
 
 ## Guías para modificación
@@ -586,7 +596,7 @@ El proyecto incluye agentes especializados en `/.claude/agents/` que proporciona
 - Service providers, facades y bindings
 - Testing con Orchestra Testbench
 - Composer y Packagist (publicación, versionado, semantic versioning)
-- Compatibilidad multi-versión (Laravel 8.x-11.x, PHP 8.0-8.4)
+- Compatibilidad multi-versión (Laravel 9.x-12.x, PHP 8.1-8.4)
 - PHPStan nivel 8, PHP CS Fixer (PSR-12)
 - CI/CD con GitHub Actions
 
@@ -714,8 +724,8 @@ c847515 - Agregar badge de status de tests en README
 7. Documentar con PHPDoc cuando sea necesario
 
 ### Al sugerir cambios:
-1. Verificar compatibilidad con PHP 8.0+
-2. Mantener compatibilidad con Laravel 8.x, 9.x, 10.x
+1. Verificar compatibilidad con PHP 8.1+
+2. Mantener compatibilidad con Laravel 9.x, 10.x, 11.x, 12.x
 3. Seguir convenciones del proyecto existente
 4. Proporcionar ejemplos de uso
 5. Considerar backward compatibility
