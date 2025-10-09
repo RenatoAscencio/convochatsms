@@ -1,0 +1,26 @@
+{
+  "recommendations": [
+    "bmewburn.vscode-intelephense-client",
+    "amirrizal.laravel-extra-intellisense",
+    "onecentlin.laravel-blade",
+    "codingyu.laravel-goto-view",
+    "mohamedbenhida.laravel-intellisense",
+    "emallin.phpunit",
+    "swordev.phpstan",
+    "junstyle.php-cs-fixer",
+    "shevaua.phpcs",
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    "editorconfig.editorconfig",
+    "gruntfuggly.todo-tree",
+    "aaron-bond.better-comments",
+    "usernamehw.errorlens",
+    "devsense.composer-php-vscode",
+    "yzhang.markdown-all-in-one",
+    "davidanson.vscode-markdownlint"
+  ],
+  "unwantedRecommendations": [
+    "felixfbecker.php-debug",
+    "felixfbecker.php-intellisense"
+  ]
+}

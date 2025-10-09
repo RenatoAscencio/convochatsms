@@ -1,0 +1,96 @@
+{
+  "PHPUnit Test Method": {
+    "prefix": "test",
+    "body": [
+      "/** @test */",
+      "public function ${1:it_should_do_something}(): void",
+      "{",
+      "    ${2:// Arrange}",
+      "    $3",
+      "",
+      "    ${4:// Act}",
+      "    $5",
+      "",
+      "    ${6:// Assert}",
+      "    \\$this->assertTrue(true);$0",
+      "}"
+    ],
+    "description": "Create PHPUnit test method"
+  },
+  "ConvoChat SMS Send": {
+    "prefix": "convosms",
+    "body": [
+      "\\$result = ConvoChat::sms()->sendSmsWithDevice(",
+      "    phone: '${1:+573001234567}',",
+      "    message: '${2:Your message here}',",
+      "    deviceId: '${3:device_id}'",
+      ");$0"
+    ],
+    "description": "Send SMS with ConvoChat"
+  },
+  "ConvoChat WhatsApp Send": {
+    "prefix": "convowa",
+    "body": [
+      "\\$result = ConvoChat::whatsapp()->sendText(",
+      "    account: '${1:account_id}',",
+      "    recipient: '${2:+573001234567}',",
+      "    message: '${3:Your message here}'",
+      ");$0"
+    ],
+    "description": "Send WhatsApp message with ConvoChat"
+  },
+  "Try Catch ConvoChat": {
+    "prefix": "tryconvo",
+    "body": [
+      "try {",
+      "    \\$result = ConvoChat::${1:sms}()->$2;",
+      "",
+      "    if (isset(\\$result['status']) && \\$result['status'] === 'success') {",
+      "        ${3:// Success}",
+      "        Log::info('ConvoChat success', \\$result);",
+      "    } else {",
+      "        ${4:// API Error}",
+      "        Log::warning('ConvoChat API error', \\$result);",
+      "    }",
+      "} catch (\\InvalidArgumentException \\$e) {",
+      "    Log::error('ConvoChat validation error: ' . \\$e->getMessage());",
+      "} catch (\\Exception \\$e) {",
+      "    Log::error('ConvoChat error: ' . \\$e->getMessage());",
+      "}$0"
+    ],
+    "description": "Try-catch block for ConvoChat operations"
+  },
+  "Laravel Controller Method": {
+    "prefix": "lcontroller",
+    "body": [
+      "public function ${1:methodName}(Request \\$request)",
+      "{",
+      "    ${2://Validate}",
+      "    \\$request->validate([",
+      "        '${3:field}' => '${4:required|string}',",
+      "    ]);",
+      "",
+      "    ${5:// Logic}",
+      "",
+      "    return response()->json([",
+      "        'success' => true,",
+      "        'data' => $6",
+      "    ]);",
+      "}$0"
+    ],
+    "description": "Laravel controller method with validation"
+  },
+  "PHP Doc Block": {
+    "prefix": "doc",
+    "body": [
+      "/**",
+      " * ${1:Description}",
+      " *",
+      " * @param ${2:type} \\$${3:param} ${4:Description}",
+      " * @return ${5:type} ${6:Description}",
+      " * @throws ${7:\\Exception} ${8:Description}",
+      " */"
+    ],
+    "description": "PHP documentation block"
+  }
+}

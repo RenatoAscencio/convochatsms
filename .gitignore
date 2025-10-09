@@ -8,7 +8,6 @@ composer.lock
 .env.*.local
 
 # IDE
-.vscode/
 .idea/
 *.swp
 *.swo
@@ -24,7 +23,14 @@ Thumbs.db
 # Testing
 /coverage/
 .phpunit.cache
+.phpunit.result.cache
 
 # Build files
 /build/
 /dist/
+
+# PHP CS Fixer
+.php-cs-fixer.cache
+
+# Claude Code - Settings locales (contienen permisos personalizados)
+.claude/settings.local.json

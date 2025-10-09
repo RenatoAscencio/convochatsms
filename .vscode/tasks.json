@@ -1,0 +1,102 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Run PHPUnit Tests",
+      "type": "shell",
+      "command": "./vendor/bin/phpunit",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run PHPUnit with Coverage",
+      "type": "shell",
+      "command": "./vendor/bin/phpunit --coverage-html coverage",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run PHPStan Analysis",
+      "type": "shell",
+      "command": "./vendor/bin/phpstan analyse",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run PHP CS Fixer (Check)",
+      "type": "shell",
+      "command": "./vendor/bin/php-cs-fixer fix --dry-run --diff",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Run PHP CS Fixer (Fix)",
+      "type": "shell",
+      "command": "./vendor/bin/php-cs-fixer fix",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Composer Install",
+      "type": "shell",
+      "command": "composer install",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Composer Update",
+      "type": "shell",
+      "command": "composer update",
+      "group": "build",
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Full Test Suite",
+      "dependsOn": [
+        "Run PHPStan Analysis",
+        "Run PHP CS Fixer (Check)",
+        "Run PHPUnit Tests"
+      ],
+      "dependsOrder": "sequence",
+      "group": {
+        "kind": "test",
+        "isDefault": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}
