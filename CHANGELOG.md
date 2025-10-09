@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🔧 Fixed
+
+- **PHPStan errors**: Reemplazado `logger()?->` con `Log` facade para evitar errores de nullsafe
+- **GitHub Actions**: Eliminado Laravel 9.x que causaba conflictos de dependencias
+- **Code Quality**: Todos los archivos ahora pasan PHPStan nivel 8
+
+### 🗑️ Removed
+
+- **Laravel 9.x support**: Laravel 9 removido por conflictos de dependencias (usar versión 1.x para Laravel 9)
+
+---
+
 ## [2.0.0] - 2025-10-09
 
 ### ✨ Added

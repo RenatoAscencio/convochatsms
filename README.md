@@ -1943,18 +1943,19 @@ class EncryptedMessageService
 ## 📋 Requisitos
 
 - PHP 8.1 - 8.4
-- Laravel 9.x | 10.x | 11.x | 12.x
+- Laravel 10.x | 11.x | 12.x
 - Guzzle HTTP 7.0+
 - API Key válida de ConvoChat
 
 ### Compatibilidad de Versiones
 
-| Laravel | PHP        | Testbench  |
-|---------|------------|------------|
-| 9.x     | 8.1 - 8.2  | ^7.0       |
-| 10.x    | 8.1 - 8.3  | ^8.0       |
-| 11.x    | 8.2 - 8.4  | ^9.0       |
-| 12.x    | 8.2 - 8.4  | ^10.0      |
+| Laravel | PHP        | Testbench  | Support Status |
+|---------|------------|------------|----------------|
+| 10.x    | 8.1 - 8.3  | ^8.0       | ✅ Active      |
+| 11.x    | 8.2 - 8.4  | ^9.0       | ✅ Active      |
+| 12.x    | 8.2 - 8.4  | ^10.0      | ✅ Active      |
+
+> **Nota**: Laravel 9.x ya no es soportado. Si necesitas Laravel 9, usa la versión 1.x del paquete.
 
 ## 📞 Soporte
 

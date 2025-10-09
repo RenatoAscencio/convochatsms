@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class SendBulkSmsJob implements ShouldQueue
 {
@@ -48,7 +49,7 @@ class SendBulkSmsJob implements ShouldQueue
                 }
 
                 if ($result['status'] !== 'success') {
-                    logger()?->warning("Failed to send SMS to {$phone}", ['result' => $result]);
+                    Log::warning("Failed to send SMS to {$phone}", ['result' => $result]);
                 }
 
                 // Rate limiting entre mensajes
@@ -57,7 +58,7 @@ class SendBulkSmsJob implements ShouldQueue
                 }
 
             } catch (\Exception $e) {
-                logger()?->error("SMS job failed for {$phone}: " . $e->getMessage());
+                Log::error("SMS job failed for {$phone}: " . $e->getMessage());
 
                 // Re-encolar mensaje fallido
                 if ($this->attempts() < $this->tries) {

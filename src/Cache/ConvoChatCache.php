@@ -3,6 +3,7 @@
 namespace ConvoChat\LaravelSmsGateway\Cache;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class ConvoChatCache
 {
@@ -55,7 +56,7 @@ class ConvoChatCache
             });
         } catch (\Exception $e) {
             // Silenciar errores durante el warming
-            logger()?->warning('ConvoChat cache warming failed: ' . $e->getMessage());
+            Log::warning('ConvoChat cache warming failed: ' . $e->getMessage());
         }
     }
 }
