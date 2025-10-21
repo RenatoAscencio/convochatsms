@@ -18,7 +18,7 @@
 | `/delete/sms.campaign` | GET | Eliminar campaña | `id` |
 | `/remote/start.sms` | GET | Iniciar campaña | `campaign` |
 | `/remote/stop.sms` | GET | Detener campaña | `campaign` |
-| `/get/devices` | GET | Dispositivos disponibles | - |
+| `/get/devices` | GET | Dispositivos disponibles | `limit`, `page` |
 | `/get/credits` | GET | Créditos restantes | - |
 | `/get/rates` | GET | Tarifas de gateways | - |
 | `/get/subscription` | GET | Paquete de suscripción | - |
@@ -150,7 +150,7 @@ $result = ConvoChat::sms()->deleteSmsCampaign(123);
 
 ```php
 // Dispositivos disponibles
-$devices = ConvoChat::sms()->getDevices();
+$devices = ConvoChat::sms()->getDevices(10, 1); // limit=10, page=1
 
 // Créditos restantes
 $credits = ConvoChat::sms()->getCredits();

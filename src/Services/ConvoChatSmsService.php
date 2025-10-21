@@ -86,11 +86,15 @@ class ConvoChatSmsService
         return $this->sendSms($params);
     }
 
-    public function getDevices(): array
+    public function getDevices(int $limit = 10, int $page = 1): array
     {
-        return $this->makeRequest(self::DEVICES_ENDPOINT, [
+        $data = [
             'secret' => $this->apiKey,
-        ]);
+            'limit' => $limit,
+            'page' => $page,
+        ];
+
+        return $this->makeRequest(self::DEVICES_ENDPOINT, $data, 'GET');
     }
 
     public function getCredits(): array
