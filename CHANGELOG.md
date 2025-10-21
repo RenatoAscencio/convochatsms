@@ -19,6 +19,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.2.1] - 2025-01-15
+
+### 🚀 Added
+
+- **WhatsApp Subscription Method**:
+  - `getWhatsAppSubscription()` method in ConvoChatWhatsAppService
+  - `SUBSCRIPTION_ENDPOINT` constant for WhatsApp subscription endpoint
+  - Test coverage for new subscription method
+
+### 🔧 Fixed
+
+- **Documentation Corrections**:
+  - Corrected base URL reference in ENDPOINTS.md documentation
+  - Restored complete README.md header with all badges and package information
+
 ## [3.2.0] - 2025-01-15
 
 ### 📚 Added
