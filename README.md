@@ -1,17 +1,17 @@
-# ConvoChat Laravel SMS Gateway
+# ConvoChat SDK - Documentación Completa
 
-[![Latest Version](https://img.shields.io/packagist/v/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
-[![Total Downloads](https://img.shields.io/packagist/dt/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
-[![License](https://img.shields.io/packagist/l/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
-[![Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
-[![Coverage](https://codecov.io/gh/RenatoAscencio/convochatsms/branch/main/graph/badge.svg)](https://codecov.io/gh/RenatoAscencio/convochatsms)
-[![PHPStan Level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://phpstan.org/)
-[![PHP Versions](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg?style=flat-square)](https://php.net/)
-[![Laravel Versions](https://img.shields.io/badge/Laravel-9%20%7C%2010%20%7C%2011%20%7C%2012-red.svg?style=flat-square)](https://laravel.com/)
+## 📋 Tabla de Contenidos
 
-Un paquete Laravel moderno y robusto para integración completa con ConvoChat API para envío de SMS y WhatsApp con soporte para múltiples modos, configuración avanzada y monitoreo.
-
-[![Status de Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
+- [Instalación](#instalación)
+- [Configuración](#configuración)
+- [Servicios Disponibles](#servicios-disponibles)
+- [SMS Service](#sms-service)
+- [WhatsApp Service](#whatsapp-service)
+- [Contacts Service](#contacts-service)
+- [OTP Service](#otp-service)
+- [Ejemplos de Uso](#ejemplos-de-uso)
+- [Manejo de Errores](#manejo-de-errores)
+- [Logging](#logging)
 
 ## 🚀 Instalación
 
@@ -19,1950 +19,1036 @@ Un paquete Laravel moderno y robusto para integración completa con ConvoChat AP
 composer require convochatsms/laravel-sms-whatsapp-gateway
 ```
 
-### Publicar configuración
+## ⚙️ Configuración
+
+### 1. Publicar archivo de configuración
 
 ```bash
 php artisan vendor:publish --tag=convochat-config
 ```
 
-## ⚙️ Configuración
-
-Agrega tu API Key en el archivo `.env`:
+### 2. Configurar variables de entorno
 
 ```env
 CONVOCHAT_API_KEY=tu_api_key_aqui
 CONVOCHAT_BASE_URL=https://sms.convo.chat/api
-
-# Configuración SMS opcional
-CONVOCHAT_SMS_MODE=devices
-CONVOCHAT_SMS_PRIORITY=2
-CONVOCHAT_SMS_DEVICE=tu_device_id
-CONVOCHAT_SMS_SIM=1
-
-# Configuración WhatsApp opcional
-CONVOCHAT_WA_ACCOUNT=tu_account_id
-CONVOCHAT_WA_PRIORITY=2
-
-# Logging opcional
-CONVOCHAT_LOG_REQUESTS=false
+CONVOCHAT_TIMEOUT=30
+CONVOCHAT_LOG_REQUESTS=true
 ```
 
-**Obtén tu API Key:** https://sms.convo.chat/dashboard/tools/keys
+### 3. Registrar el Service Provider
 
-## 📱 Uso - SMS
+El Service Provider se registra automáticamente en Laravel 5.5+.
 
-### Enviar SMS básico
+## 🔧 Servicios Disponibles
 
+El SDK incluye 4 servicios principales:
+
+- **ConvoChatSmsService** - Gestión completa de SMS
+- **ConvoChatWhatsAppService** - Gestión completa de WhatsApp
+- **ConvoChatContactsService** - Gestión de contactos y grupos
+- **ConvoChatOtpService** - Envío y verificación de códigos OTP
+
+## 📱 SMS Service
+
+### Métodos Principales
+
+#### `sendSms(array $params)`
+Envía un SMS individual.
+
+**Parámetros requeridos:**
+- `phone` (string) - Número de teléfono destino (formato E.164 o local)
+- `message` (string) - Texto del mensaje
+- `mode` (string) - Modo de envío: "devices" o "credits"
+
+**Parámetros opcionales:**
+- `device` (string) - ID del dispositivo (modo devices)
+- `gateway` (string|number) - ID del gateway (modo credits)
+- `sim` (number) - Slot SIM (solo devices)
+- `priority` (number) - Prioridad: 0=alta, 1=normal, 2=baja
+- `shortener` (number) - ID del acortador de URL
+
+**Ejemplo:**
 ```php
 use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
 
-// Con dispositivo Android
-$result = ConvoChat::sms()->sendSmsWithDevice(
-    phone: '+573001234567',
-    message: '¡Hola desde ConvoChat!',
-    deviceId: 'abc123'
-);
+// Envío con dispositivos
+$result = ConvoChat::sms()->sendSms([
+    'phone' => '+522221234567',
+    'message' => 'Hola desde ConvoChat!',
+    'mode' => 'devices',
+    'device' => 'device123',
+    'sim' => 1,
+    'priority' => 1
+]);
 
-// Con créditos
+// Envío con créditos
+$result = ConvoChat::sms()->sendSms([
+    'phone' => '+522221234567',
+    'message' => 'Hola desde ConvoChat!',
+    'mode' => 'credits',
+    'gateway' => 'gateway456',
+    'priority' => 0
+]);
+```
+
+#### `sendSmsWithDevice(string $phone, string $message, string $deviceId, array $options = [])`
+Método helper para envío con dispositivos.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->sendSmsWithDevice(
+    '+522221234567',
+    'Mensaje de prueba',
+    'device123',
+    ['sim' => 1, 'priority' => 1]
+);
+```
+
+#### `sendSmsWithCredits(string $phone, string $message, ?string $gatewayId = null, array $options = [])`
+Método helper para envío con créditos.
+
+**Ejemplo:**
+```php
 $result = ConvoChat::sms()->sendSmsWithCredits(
-    phone: '+573001234567',
-    message: '¡Hola desde ConvoChat!',
-    gatewayId: 'gateway123'
+    '+522221234567',
+    'Mensaje de prueba',
+    'gateway456',
+    ['priority' => 0]
 );
 ```
 
-### Opciones avanzadas SMS
+#### `sendBulkSms(array $recipients, string $message, array $options = [])`
+Envía SMS masivo a múltiples destinatarios.
 
+**Ejemplo:**
 ```php
-$result = ConvoChat::sms()->sendSmsWithDevice(
-    phone: '+573001234567',
-    message: 'Mensaje importante',
-    deviceId: 'abc123',
-    options: [
-        'sim' => 1,           // SIM 1 o 2
-        'priority' => 1       // 1 = alta, 2 = normal
-    ]
+$result = ConvoChat::sms()->sendBulkSms(
+    ['+522221234567', '+522229876543', '+522225556667'],
+    'Mensaje masivo',
+    ['mode' => 'credits', 'gateway' => 'gateway456']
 );
 ```
 
-### Obtener información SMS
+### Métodos de Consulta
 
+#### `getSmsPending(array $filters = [])`
+Obtiene mensajes SMS pendientes.
+
+**Parámetros opcionales:**
+- `limit` (number) - Límite de resultados (default: 10)
+- `page` (number) - Número de página (default: 1)
+
+**Ejemplo:**
 ```php
-// Dispositivos conectados
+$pending = ConvoChat::sms()->getSmsPending(['limit' => 20, 'page' => 1]);
+```
+
+#### `getSmsReceived(array $filters = [])`
+Obtiene mensajes SMS recibidos.
+
+**Ejemplo:**
+```php
+$received = ConvoChat::sms()->getSmsReceived(['limit' => 50]);
+```
+
+#### `getSmsSent(array $filters = [])`
+Obtiene mensajes SMS enviados.
+
+**Ejemplo:**
+```php
+$sent = ConvoChat::sms()->getSmsSent(['limit' => 100]);
+```
+
+#### `getSmsMessage(int $messageId, string $type)`
+Obtiene un mensaje SMS específico.
+
+**Parámetros:**
+- `messageId` (int) - ID del mensaje
+- `type` (string) - Tipo: "sent" o "received"
+
+**Ejemplo:**
+```php
+$message = ConvoChat::sms()->getSmsMessage(123, 'sent');
+```
+
+#### `getSmsCampaigns(array $filters = [])`
+Obtiene todas las campañas SMS.
+
+**Ejemplo:**
+```php
+$campaigns = ConvoChat::sms()->getSmsCampaigns(['limit' => 25]);
+```
+
+### Métodos de Gestión de Campañas
+
+#### `startSmsCampaign(int $campaignId)`
+Inicia una campaña SMS existente.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->startSmsCampaign(123);
+```
+
+#### `stopSmsCampaign(int $campaignId)`
+Detiene una campaña SMS activa.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->stopSmsCampaign(123);
+```
+
+### Métodos de Eliminación
+
+#### `deleteSmsReceived(int $messageId)`
+Elimina un SMS recibido.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->deleteSmsReceived(123);
+```
+
+#### `deleteSmsSent(int $messageId)`
+Elimina un SMS enviado.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->deleteSmsSent(123);
+```
+
+#### `deleteSmsCampaign(int $campaignId)`
+Elimina una campaña SMS.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::sms()->deleteSmsCampaign(123);
+```
+
+### Métodos de Información
+
+#### `getDevices()`
+Obtiene la lista de dispositivos disponibles.
+
+**Ejemplo:**
+```php
 $devices = ConvoChat::sms()->getDevices();
+```
 
-// Créditos disponibles
+#### `getCredits()`
+Obtiene los créditos restantes.
+
+**Ejemplo:**
+```php
 $credits = ConvoChat::sms()->getCredits();
+```
 
-// Gateways y tarifas
-$rates = ConvoChat::sms()->getGatewayRates();
+#### `getRates()`
+Obtiene las tarifas de los gateways.
 
-// Información de suscripción
+**Ejemplo:**
+```php
+$rates = ConvoChat::sms()->getRates();
+```
+
+#### `getSubscription()`
+Obtiene el paquete de suscripción actual.
+
+**Ejemplo:**
+```php
 $subscription = ConvoChat::sms()->getSubscription();
 ```
 
-## 📞 Uso - WhatsApp
+## 💬 WhatsApp Service
 
-### Enviar mensajes de texto
+### Métodos Principales
 
+#### `sendMessage(array $params)`
+Envía un mensaje de WhatsApp.
+
+**Parámetros requeridos:**
+- `account` (string) - ID único de la cuenta de WhatsApp
+- `recipient` (string) - Número o grupo destino
+- `type` (string) - Tipo de mensaje: "text", "media", "document"
+- `message` (string) - Contenido del mensaje
+
+**Parámetros opcionales:**
+- `priority` (number) - Prioridad: 1=alta, 2=normal
+- `media_file` (string) - Archivo multimedia (binary)
+- `media_url` (string) - URL del archivo multimedia
+- `media_type` (string) - Tipo de media: "image", "audio", "video"
+- `document_file` (string) - Archivo de documento (binary)
+- `document_url` (string) - URL del documento
+- `document_name` (string) - Nombre del documento
+- `document_type` (string) - Tipo: "pdf", "txt", "xls", "xlsx", "doc", "docx"
+- `shortener` (number) - ID del shortener
+
+**Ejemplo:**
 ```php
-use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
+// Mensaje de texto
+$result = ConvoChat::whatsapp()->sendMessage([
+    'account' => 'account123',
+    'recipient' => '+522221234567',
+    'type' => 'text',
+    'message' => 'Hola desde WhatsApp!',
+    'priority' => 2
+]);
 
+// Mensaje con media
+$result = ConvoChat::whatsapp()->sendMessage([
+    'account' => 'account123',
+    'recipient' => '+522221234567',
+    'type' => 'media',
+    'message' => 'Mira esta imagen',
+    'media_url' => 'https://example.com/image.jpg',
+    'media_type' => 'image',
+    'priority' => 1
+]);
+
+// Mensaje con documento
+$result = ConvoChat::whatsapp()->sendMessage([
+    'account' => 'account123',
+    'recipient' => '+522221234567',
+    'type' => 'document',
+    'message' => 'Aquí está el documento',
+    'document_url' => 'https://example.com/document.pdf',
+    'document_name' => 'documento.pdf',
+    'document_type' => 'pdf'
+]);
+```
+
+#### `sendText(string $account, string $recipient, string $message, int $priority = 2)`
+Método helper para enviar mensajes de texto.
+
+**Ejemplo:**
+```php
 $result = ConvoChat::whatsapp()->sendText(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    message: '¡Hola por WhatsApp!'
+    'account123',
+    '+522221234567',
+    'Mensaje de texto simple',
+    1
 );
 ```
 
-### Enviar multimedia
+#### `sendMedia(string $account, string $recipient, string $message, string $mediaUrl, string $mediaType = 'image', int $priority = 2)`
+Método helper para enviar mensajes con multimedia.
 
+**Ejemplo:**
 ```php
-// Imagen/Video/Audio
 $result = ConvoChat::whatsapp()->sendMedia(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    message: 'Mira esta imagen',
-    mediaUrl: 'https://ejemplo.com/imagen.jpg',
-    mediaType: 'image'
-);
-
-// Documento
-$result = ConvoChat::whatsapp()->sendDocument(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    message: 'Te envío el reporte',
-    documentUrl: 'https://ejemplo.com/reporte.pdf',
-    documentName: 'Reporte-Mensual.pdf',
-    documentType: 'pdf'
+    'account123',
+    '+522221234567',
+    'Mira esta imagen',
+    'https://example.com/image.jpg',
+    'image',
+    1
 );
 ```
 
-### Gestión de cuentas WhatsApp
+#### `sendDocument(string $account, string $recipient, string $message, string $documentUrl, string $documentName, string $documentType = 'pdf', int $priority = 2)`
+Método helper para enviar documentos.
 
+**Ejemplo:**
 ```php
-// Obtener servidores disponibles
+$result = ConvoChat::whatsapp()->sendDocument(
+    'account123',
+    '+522221234567',
+    'Aquí está el documento',
+    'https://example.com/document.pdf',
+    'documento.pdf',
+    'pdf',
+    1
+);
+```
+
+#### `sendBulkWhatsApp(array $recipients, string $message, array $options = [])`
+Envía WhatsApp masivo a múltiples destinatarios.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::whatsapp()->sendBulkWhatsApp(
+    ['+522221234567', '+522229876543', '+522225556667'],
+    'Mensaje masivo de WhatsApp',
+    ['account' => 'account123', 'type' => 'text']
+);
+```
+
+### Métodos de Consulta
+
+#### `getWhatsAppPending(array $filters = [])`
+Obtiene mensajes WhatsApp pendientes.
+
+**Ejemplo:**
+```php
+$pending = ConvoChat::whatsapp()->getWhatsAppPending(['limit' => 20]);
+```
+
+#### `getWhatsAppReceived(array $filters = [])`
+Obtiene mensajes WhatsApp recibidos.
+
+**Ejemplo:**
+```php
+$received = ConvoChat::whatsapp()->getWhatsAppReceived(['limit' => 50]);
+```
+
+#### `getWhatsAppSent(array $filters = [])`
+Obtiene mensajes WhatsApp enviados.
+
+**Ejemplo:**
+```php
+$sent = ConvoChat::whatsapp()->getWhatsAppSent(['limit' => 100]);
+```
+
+#### `getWhatsAppMessage(int $messageId, string $type)`
+Obtiene un mensaje WhatsApp específico.
+
+**Ejemplo:**
+```php
+$message = ConvoChat::whatsapp()->getWhatsAppMessage(123, 'sent');
+```
+
+#### `getWhatsAppCampaigns(array $filters = [])`
+Obtiene todas las campañas WhatsApp.
+
+**Ejemplo:**
+```php
+$campaigns = ConvoChat::whatsapp()->getWhatsAppCampaigns(['limit' => 25]);
+```
+
+#### `getWhatsAppGroups(array $filters = [])`
+Obtiene los grupos de WhatsApp.
+
+**Ejemplo:**
+```php
+$groups = ConvoChat::whatsapp()->getWhatsAppGroups(['limit' => 10]);
+```
+
+#### `getWhatsAppGroupContacts(string $groupId, array $filters = [])`
+Obtiene los contactos de un grupo específico.
+
+**Ejemplo:**
+```php
+$contacts = ConvoChat::whatsapp()->getWhatsAppGroupContacts('group123', ['limit' => 50]);
+```
+
+### Métodos de Gestión de Cuentas
+
+#### `getWhatsAppServers()`
+Obtiene los servidores WhatsApp disponibles.
+
+**Ejemplo:**
+```php
 $servers = ConvoChat::whatsapp()->getWhatsAppServers();
+```
 
-// Vincular nueva cuenta
-$linkData = ConvoChat::whatsapp()->linkWhatsAppAccount(serverId: 1);
-// Retorna QR code para escanear
+#### `getWhatsAppAccounts()`
+Obtiene las cuentas WhatsApp vinculadas.
 
-// Re-vincular cuenta existente
-$result = ConvoChat::whatsapp()->relinkWhatsAppAccount(
-    serverId: 1,
-    uniqueId: 'unique_account_id'
-);
-
-// Validar número
-$validation = ConvoChat::whatsapp()->validateWhatsAppNumber(
-    accountId: 'wa_account_id',
-    phone: '+573001234567'
-);
-
-// Obtener cuentas vinculadas
+**Ejemplo:**
+```php
 $accounts = ConvoChat::whatsapp()->getWhatsAppAccounts();
 ```
 
-### Casos de uso avanzados de WhatsApp
+#### `getWhatsAppInfo(string $accountId)`
+Obtiene información de una cuenta específica.
 
-#### Envío de mensajes con botones
-
+**Ejemplo:**
 ```php
-// Mensaje con botones de respuesta rápida
-$result = ConvoChat::whatsapp()->sendButtonMessage(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    message: '¿Deseas confirmar tu cita para mañana?',
-    buttons: [
-        ['id' => 'confirm', 'title' => 'Confirmar'],
-        ['id' => 'reschedule', 'title' => 'Reprogramar'],
-        ['id' => 'cancel', 'title' => 'Cancelar']
-    ]
-);
+$info = ConvoChat::whatsapp()->getWhatsAppInfo('account123');
 ```
 
-#### Envío masivo con plantillas
+#### `getWhatsAppQr(string $accountId)`
+Obtiene el código QR para vincular una cuenta.
 
+**Ejemplo:**
 ```php
-// Envío de mensajes promocionales usando plantillas aprobadas
-$contacts = [
-    '+573001234567' => ['name' => 'Juan', 'discount' => '20%'],
-    '+573007654321' => ['name' => 'María', 'discount' => '15%']
-];
-
-foreach ($contacts as $phone => $data) {
-    $result = ConvoChat::whatsapp()->sendTemplate(
-        account: 'wa_account_id',
-        recipient: $phone,
-        templateName: 'promocion_personalizada',
-        templateParams: [
-            $data['name'],
-            $data['discount']
-        ]
-    );
-}
+$qr = ConvoChat::whatsapp()->getWhatsAppQr('account123');
 ```
 
-#### Envío de ubicación
+#### `validateWhatsAppNumber(string $accountId, string $phone)`
+Valida si un número existe en WhatsApp.
 
+**Ejemplo:**
 ```php
-$result = ConvoChat::whatsapp()->sendLocation(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    latitude: 4.6097100,
-    longitude: -74.0817500,
-    address: 'Bogotá, Colombia',
-    name: 'Nuestra oficina principal'
-);
+$validation = ConvoChat::whatsapp()->validateWhatsAppNumber('account123', '+522221234567');
 ```
 
-#### Gestión de estado de mensajes
+### Métodos de Gestión de Campañas
 
+#### `startWhatsAppCampaign(int $campaignId)`
+Inicia una campaña WhatsApp existente.
+
+**Ejemplo:**
 ```php
-// Verificar estado de entrega
-$messageStatus = ConvoChat::whatsapp()->getMessageStatus(
-    messageId: 'msg_123456789'
-);
-
-// Marcar mensaje como leído
-$result = ConvoChat::whatsapp()->markAsRead(
-    account: 'wa_account_id',
-    messageId: 'msg_123456789'
-);
-
-// Obtener historial de conversación
-$conversation = ConvoChat::whatsapp()->getConversationHistory(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    limit: 50
-);
+$result = ConvoChat::whatsapp()->startWhatsAppCampaign(123);
 ```
 
-#### WhatsApp Business API Features
+#### `stopWhatsAppCampaign(int $campaignId)`
+Detiene una campaña WhatsApp activa.
 
+**Ejemplo:**
 ```php
-// Configurar perfil de negocio
-$result = ConvoChat::whatsapp()->updateBusinessProfile(
-    account: 'wa_account_id',
-    data: [
-        'description' => 'Empresa líder en tecnología',
-        'email' => 'contacto@empresa.com',
-        'website' => 'https://empresa.com',
-        'address' => 'Calle 123 #45-67, Bogotá',
-        'category' => 'SOFTWARE'
-    ]
-);
-
-// Crear catálogo de productos
-$result = ConvoChat::whatsapp()->createProduct(
-    account: 'wa_account_id',
-    data: [
-        'name' => 'Producto Premium',
-        'description' => 'Descripción detallada del producto',
-        'price' => 99900,
-        'currency' => 'COP',
-        'image_url' => 'https://ejemplo.com/producto.jpg',
-        'category' => 'ELECTRONICS'
-    ]
-);
-
-// Enviar catálogo a cliente
-$result = ConvoChat::whatsapp()->sendCatalog(
-    account: 'wa_account_id',
-    recipient: '+573001234567',
-    message: 'Mira nuestro catálogo de productos'
-);
+$result = ConvoChat::whatsapp()->stopWhatsAppCampaign(123);
 ```
 
-## 🔧 Uso sin Facade
+## 👥 Contacts Service
 
-### Inyección de dependencias básica
+### Métodos de Contactos
 
+#### `getContacts(array $filters = [])`
+Obtiene la lista de contactos guardados.
+
+**Parámetros opcionales:**
+- `limit` (number) - Límite de resultados (default: 10)
+- `page` (number) - Número de página (default: 1)
+
+**Ejemplo:**
 ```php
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
-
-// SMS
-$smsService = app(ConvoChatSmsService::class);
-$result = $smsService->sendSmsWithDevice('+573001234567', 'Mensaje', 'device123');
-
-// WhatsApp
-$waService = app(ConvoChatWhatsAppService::class);
-$result = $waService->sendText('account123', '+573001234567', 'Mensaje WA');
+$contacts = ConvoChat::contacts()->getContacts(['limit' => 20, 'page' => 1]);
 ```
 
-### Inyección de dependencias avanzada
+#### `createContact(array $params)`
+Crea un nuevo contacto.
 
-#### En Controladores
+**Parámetros requeridos:**
+- `phone` (string) - Número móvil del destinatario
+- `name` (string) - Nombre del contacto
+- `groups` (string) - Lista de IDs de grupos separados por comas
 
+**Ejemplo:**
 ```php
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
-
-class NotificationController extends Controller
-{
-    public function __construct(
-        private ConvoChatSmsService $smsService,
-        private ConvoChatWhatsAppService $whatsappService
-    ) {}
-
-    public function sendMultiChannelNotification(Request $request)
-    {
-        $phone = $request->phone;
-        $message = $request->message;
-
-        // Intentar primero por WhatsApp
-        try {
-            $result = $this->whatsappService->sendText(
-                config('convochat.whatsapp.default_account'),
-                $phone,
-                $message
-            );
-
-            if ($result['status'] === 'success') {
-                return response()->json(['channel' => 'whatsapp', 'result' => $result]);
-            }
-        } catch (Exception $e) {
-            logger('WhatsApp failed, trying SMS: ' . $e->getMessage());
-        }
-
-        // Fallback a SMS si WhatsApp falla
-        try {
-            $result = $this->smsService->sendSmsWithCredits($phone, $message);
-            return response()->json(['channel' => 'sms', 'result' => $result]);
-        } catch (Exception $e) {
-            return response()->json(['error' => 'All channels failed'], 500);
-        }
-    }
-}
+$result = ConvoChat::contacts()->createContact([
+    'phone' => '+522221234567',
+    'name' => 'Juan Pérez',
+    'groups' => '1,2,3'
+]);
 ```
 
-#### En Service Providers
+#### `deleteContact(int $contactId)`
+Elimina un contacto existente.
 
+**Ejemplo:**
 ```php
-use Illuminate\Support\ServiceProvider;
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-
-class AppServiceProvider extends ServiceProvider
-{
-    public function register()
-    {
-        // Configuración personalizada del servicio
-        $this->app->singleton('convochat.custom', function ($app) {
-            return new ConvoChatSmsService(
-                apiKey: config('convochat.api_key'),
-                baseUrl: config('convochat.base_url'),
-                timeout: 60, // timeout personalizado
-                retries: 3   // reintentos personalizados
-            );
-        });
-    }
-}
+$result = ConvoChat::contacts()->deleteContact(123);
 ```
 
-#### En Jobs/Queues
+### Métodos de Grupos
 
+#### `getGroups(array $filters = [])`
+Obtiene los grupos de contactos existentes.
+
+**Parámetros opcionales:**
+- `limit` (number) - Límite de resultados (default: 10)
+- `page` (number) - Número de página (default: 1)
+
+**Ejemplo:**
 ```php
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-
-class SendBulkSmsJob implements ShouldQueue
-{
-    use InteractsWithQueue, SerializesModels;
-
-    public function __construct(
-        private array $recipients,
-        private string $message
-    ) {}
-
-    public function handle(ConvoChatSmsService $smsService)
-    {
-        foreach ($this->recipients as $phone) {
-            try {
-                $result = $smsService->sendSmsWithCredits($phone, $this->message);
-
-                if ($result['status'] !== 'success') {
-                    // Re-encolar mensaje fallido
-                    dispatch(new SendBulkSmsJob([$phone], $this->message))
-                        ->delay(now()->addMinutes(5));
-                }
-            } catch (Exception $e) {
-                logger("Failed to send SMS to {$phone}: " . $e->getMessage());
-                $this->fail($e);
-            }
-        }
-    }
-}
+$groups = ConvoChat::contacts()->getGroups(['limit' => 15]);
 ```
 
-#### Patrón Repository
+#### `createGroup(array $params)`
+Crea un nuevo grupo de contactos.
 
+**Parámetros requeridos:**
+- `name` (string) - Nombre del grupo
+
+**Ejemplo:**
 ```php
-interface NotificationRepositoryInterface
-{
-    public function sendSms(string $phone, string $message): array;
-    public function sendWhatsApp(string $phone, string $message): array;
-}
-
-class ConvoChatNotificationRepository implements NotificationRepositoryInterface
-{
-    public function __construct(
-        private ConvoChatSmsService $smsService,
-        private ConvoChatWhatsAppService $whatsappService
-    ) {}
-
-    public function sendSms(string $phone, string $message): array
-    {
-        return $this->smsService->sendSmsWithCredits($phone, $message);
-    }
-
-    public function sendWhatsApp(string $phone, string $message): array
-    {
-        return $this->whatsappService->sendText(
-            config('convochat.whatsapp.default_account'),
-            $phone,
-            $message
-        );
-    }
-}
-
-// En AppServiceProvider
-public function register()
-{
-    $this->app->bind(
-        NotificationRepositoryInterface::class,
-        ConvoChatNotificationRepository::class
-    );
-}
+$result = ConvoChat::contacts()->createGroup([
+    'name' => 'Clientes VIP'
+]);
 ```
 
-## 📝 Notificaciones Laravel
+#### `deleteGroup(int $groupId)`
+Elimina un grupo de contactos.
 
-Puedes crear notificaciones personalizadas:
+**Ejemplo:**
+```php
+$result = ConvoChat::contacts()->deleteGroup(123);
+```
+
+### Métodos de Gestión de Bajas
+
+#### `getUnsubscribed(array $filters = [])`
+Obtiene los contactos que se dieron de baja.
+
+**Parámetros opcionales:**
+- `limit` (number) - Límite de resultados (default: 10)
+- `page` (number) - Número de página (default: 1)
+
+**Ejemplo:**
+```php
+$unsubscribed = ConvoChat::contacts()->getUnsubscribed(['limit' => 25]);
+```
+
+#### `deleteUnsubscribed(int $contactId)`
+Elimina un contacto dado de baja.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::contacts()->deleteUnsubscribed(123);
+```
+
+## 🔐 OTP Service
+
+### Métodos Principales
+
+#### `sendOtp(array $params)`
+Envía una contraseña de un solo uso (OTP).
+
+**Parámetros requeridos:**
+- `type` (string) - Tipo: "sms" o "whatsapp"
+- `message` (string) - Mensaje con {{otp}} para incluir el código
+- `phone` (string) - Número del destinatario
+
+**Parámetros opcionales:**
+- `expire` (number) - Expiración en segundos (default: 300)
+- `priority` (number) - Prioridad: 1=alta, 2=normal (default: 2)
+- `account` (string) - Solo para WhatsApp
+- `mode` (string) - "devices" o "credits"
+- `device` (string) - ID de dispositivo (modo devices)
+- `gateway` (string|number) - ID del gateway (modo credits)
+- `sim` (number) - SIM slot (solo devices)
+
+**Ejemplo:**
+```php
+// OTP por SMS
+$result = ConvoChat::otp()->sendOtp([
+    'type' => 'sms',
+    'message' => 'Tu código de verificación es {{otp}}',
+    'phone' => '+522221234567',
+    'expire' => 300,
+    'priority' => 1,
+    'mode' => 'credits',
+    'gateway' => 'gateway456'
+]);
+
+// OTP por WhatsApp
+$result = ConvoChat::otp()->sendOtp([
+    'type' => 'whatsapp',
+    'message' => 'Tu código de verificación es {{otp}}',
+    'phone' => '+522221234567',
+    'account' => 'account123',
+    'expire' => 600,
+    'priority' => 1
+]);
+```
+
+#### `verifyOtp(string $otp)`
+Verifica un OTP enviado.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::otp()->verifyOtp('123456');
+```
+
+## 📚 Ejemplos de Uso
+
+### Ejemplo Completo de SMS
 
 ```php
-use Illuminate\Notifications\Notification;
+<?php
+
 use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
 
-class OrderNotification extends Notification
+class SmsController extends Controller
 {
-    public function via($notifiable)
-    {
-        return ['convochat'];
-    }
-
-    public function toConvoChat($notifiable)
-    {
-        // Para SMS
-        ConvoChat::sms()->sendSmsWithDevice(
-            $notifiable->phone,
-            'Tu pedido #123 ha sido confirmado',
-            config('convochat.sms.default_device')
-        );
-
-        // Para WhatsApp
-        ConvoChat::whatsapp()->sendText(
-            config('convochat.whatsapp.default_account'),
-            $notifiable->phone,
-            'Tu pedido #123 ha sido confirmado ✅'
-        );
-    }
-}
-```
-
-## ⚡ Ejemplos de Controlador
-
-```php
-use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
-
-class NotificationController extends Controller
-{
-    public function sendWelcomeSms(Request $request)
+    public function sendWelcomeSms()
     {
         try {
-            $result = ConvoChat::sms()->sendSmsWithCredits(
-                phone: $request->phone,
-                message: "¡Bienvenido a nuestra plataforma! 🎉"
-            );
-
-            return response()->json(['success' => true, 'data' => $result]);
-        } catch (Exception $e) {
+            // Verificar créditos disponibles
+            $credits = ConvoChat::sms()->getCredits();
+            
+            if ($credits['data']['credits'] < 1) {
+                return response()->json(['error' => 'Créditos insuficientes'], 400);
+            }
+            
+            // Enviar SMS
+            $result = ConvoChat::sms()->sendSms([
+                'phone' => '+522221234567',
+                'message' => '¡Bienvenido a nuestro servicio!',
+                'mode' => 'credits',
+                'gateway' => 'gateway456',
+                'priority' => 1
+            ]);
+            
+            return response()->json([
+                'success' => true,
+                'message_id' => $result['data']['messageId']
+            ]);
+            
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    public function sendWhatsAppPromo(Request $request)
+    
+    public function getSmsHistory()
     {
         try {
+            $sent = ConvoChat::sms()->getSmsSent(['limit' => 50]);
+            $received = ConvoChat::sms()->getSmsReceived(['limit' => 50]);
+            
+            return response()->json([
+                'sent' => $sent['data'],
+                'received' => $received['data']
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+}
+```
+
+### Ejemplo Completo de WhatsApp
+
+```php
+<?php
+
+use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
+
+class WhatsAppController extends Controller
+{
+    public function sendWelcomeMessage()
+    {
+        try {
+            // Obtener cuentas disponibles
+            $accounts = ConvoChat::whatsapp()->getWhatsAppAccounts();
+            
+            if (empty($accounts['data'])) {
+                return response()->json(['error' => 'No hay cuentas WhatsApp disponibles'], 400);
+            }
+            
+            $accountId = $accounts['data'][0]['unique'];
+            
+            // Enviar mensaje de bienvenida
             $result = ConvoChat::whatsapp()->sendText(
-                account: config('convochat.whatsapp.default_account'),
-                recipient: $request->phone,
-                message: "🔥 Oferta especial solo por hoy: 50% de descuento"
+                $accountId,
+                '+522221234567',
+                '¡Hola! Bienvenido a nuestro servicio de WhatsApp. ¿En qué podemos ayudarte?',
+                1
             );
-
-            return response()->json(['success' => true, 'data' => $result]);
-        } catch (Exception $e) {
+            
+            return response()->json([
+                'success' => true,
+                'message_id' => $result['data']['messageId']
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+    
+    public function sendMediaMessage()
+    {
+        try {
+            $result = ConvoChat::whatsapp()->sendMedia(
+                'account123',
+                '+522221234567',
+                'Mira nuestra nueva promoción',
+                'https://example.com/promotion.jpg',
+                'image',
+                1
+            );
+            
+            return response()->json([
+                'success' => true,
+                'message_id' => $result['data']['messageId']
+            ]);
+            
+        } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 }
 ```
 
-## 🛠️ Manejo de Errores
-
-### Manejo básico de errores
+### Ejemplo Completo de Contactos
 
 ```php
-try {
-    $result = ConvoChat::sms()->sendSmsWithDevice('+573001234567', 'Test', 'device123');
+<?php
 
-    if (isset($result['status']) && $result['status'] === 'success') {
-        // Mensaje enviado exitosamente
-        logger('SMS enviado: ' . json_encode($result));
-    } else {
-        // Error en la respuesta de la API
-        logger('Error API: ' . json_encode($result));
-    }
-} catch (Exception $e) {
-    // Error de conexión o configuración
-    logger('Error ConvoChat: ' . $e->getMessage());
-}
-```
+use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
 
-### Patrones avanzados de manejo de errores
-
-#### Manejo granular de errores por tipo
-
-```php
-use ConvoChat\LaravelSmsGateway\Exceptions\ConvoChatApiException;
-use ConvoChat\LaravelSmsGateway\Exceptions\ConvoChatConnectionException;
-use ConvoChat\LaravelSmsGateway\Exceptions\ConvoChatValidationException;
-
-try {
-    $result = ConvoChat::sms()->sendSmsWithDevice($phone, $message, $deviceId);
-
-    // Verificar respuesta exitosa
-    if ($result['status'] === 'success') {
-        return ['success' => true, 'data' => $result];
-    }
-
-    // Manejar errores específicos de la API
-    return $this->handleApiError($result);
-
-} catch (ConvoChatValidationException $e) {
-    // Errores de validación (datos inválidos)
-    return [
-        'success' => false,
-        'error' => 'validation',
-        'message' => 'Datos inválidos: ' . $e->getMessage(),
-        'details' => $e->getValidationErrors()
-    ];
-
-} catch (ConvoChatApiException $e) {
-    // Errores específicos de la API ConvoChat
-    return [
-        'success' => false,
-        'error' => 'api',
-        'message' => 'Error de API: ' . $e->getMessage(),
-        'code' => $e->getApiErrorCode()
-    ];
-
-} catch (ConvoChatConnectionException $e) {
-    // Errores de conexión
-    return [
-        'success' => false,
-        'error' => 'connection',
-        'message' => 'Error de conexión: ' . $e->getMessage(),
-        'retry_after' => 60
-    ];
-
-} catch (Exception $e) {
-    // Otros errores no esperados
-    logger()->error('ConvoChat unexpected error', [
-        'error' => $e->getMessage(),
-        'trace' => $e->getTraceAsString()
-    ]);
-
-    return [
-        'success' => false,
-        'error' => 'unexpected',
-        'message' => 'Error interno del servidor'
-    ];
-}
-```
-
-#### Sistema de reintentos automáticos
-
-```php
-class ConvoChatRetryService
+class ContactController extends Controller
 {
-    private const MAX_RETRIES = 3;
-    private const RETRY_DELAYS = [1, 3, 5]; // segundos
-
-    public function sendWithRetry(callable $sendFunction, array $params): array
+    public function importContacts()
     {
-        $lastException = null;
-
-        for ($attempt = 0; $attempt < self::MAX_RETRIES; $attempt++) {
-            try {
-                $result = call_user_func_array($sendFunction, $params);
-
-                if ($result['status'] === 'success') {
-                    return $result;
-                }
-
-                // Si es error recuperable, intentar de nuevo
-                if ($this->isRetryableError($result)) {
-                    $this->waitBeforeRetry($attempt);
-                    continue;
-                }
-
-                // Error no recuperable, no reintentar
-                return $result;
-
-            } catch (ConvoChatConnectionException $e) {
-                $lastException = $e;
-                if ($attempt < self::MAX_RETRIES - 1) {
-                    $this->waitBeforeRetry($attempt);
-                    continue;
-                }
-            } catch (Exception $e) {
-                // Error no recuperable
-                throw $e;
-            }
-        }
-
-        throw $lastException ?? new Exception('Máximo de reintentos alcanzado');
-    }
-
-    private function isRetryableError(array $result): bool
-    {
-        $retryableCodes = ['rate_limit', 'temporary_error', 'server_busy'];
-        return in_array($result['error_code'] ?? '', $retryableCodes);
-    }
-
-    private function waitBeforeRetry(int $attempt): void
-    {
-        if (isset(self::RETRY_DELAYS[$attempt])) {
-            sleep(self::RETRY_DELAYS[$attempt]);
-        }
-    }
-}
-
-// Uso del servicio de reintentos
-$retryService = new ConvoChatRetryService();
-
-$result = $retryService->sendWithRetry(
-    fn() => ConvoChat::sms()->sendSmsWithCredits($phone, $message),
-    []
-);
-```
-
-#### Circuit Breaker Pattern
-
-```php
-class ConvoChatCircuitBreaker
-{
-    private const FAILURE_THRESHOLD = 5;
-    private const RECOVERY_TIMEOUT = 300; // 5 minutos
-
-    private string $state = 'closed'; // closed, open, half-open
-    private int $failureCount = 0;
-    private ?int $lastFailureTime = null;
-
-    public function call(callable $function, array $params)
-    {
-        if ($this->state === 'open') {
-            if ($this->shouldAttemptReset()) {
-                $this->state = 'half-open';
-            } else {
-                throw new Exception('Circuit breaker is OPEN');
-            }
-        }
-
         try {
-            $result = call_user_func_array($function, $params);
-            $this->onSuccess();
-            return $result;
-        } catch (Exception $e) {
-            $this->onFailure();
-            throw $e;
+            // Crear grupo primero
+            $group = ConvoChat::contacts()->createGroup([
+                'name' => 'Importación ' . date('Y-m-d')
+            ]);
+            
+            $groupId = $group['data']['id'];
+            
+            // Importar contactos
+            $contacts = [
+                ['name' => 'Juan Pérez', 'phone' => '+522221234567'],
+                ['name' => 'María García', 'phone' => '+522229876543'],
+                ['name' => 'Carlos López', 'phone' => '+522225556667']
+            ];
+            
+            $imported = [];
+            foreach ($contacts as $contact) {
+                $result = ConvoChat::contacts()->createContact([
+                    'name' => $contact['name'],
+                    'phone' => $contact['phone'],
+                    'groups' => $groupId
+                ]);
+                
+                $imported[] = $result;
+            }
+            
+            return response()->json([
+                'success' => true,
+                'group_id' => $groupId,
+                'imported_count' => count($imported),
+                'contacts' => $imported
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    private function onSuccess(): void
+    
+    public function getContactStats()
     {
-        $this->failureCount = 0;
-        $this->state = 'closed';
-    }
-
-    private function onFailure(): void
-    {
-        $this->failureCount++;
-        $this->lastFailureTime = time();
-
-        if ($this->failureCount >= self::FAILURE_THRESHOLD) {
-            $this->state = 'open';
+        try {
+            $contacts = ConvoChat::contacts()->getContacts(['limit' => 1000]);
+            $groups = ConvoChat::contacts()->getGroups(['limit' => 100]);
+            $unsubscribed = ConvoChat::contacts()->getUnsubscribed(['limit' => 100]);
+            
+            return response()->json([
+                'total_contacts' => count($contacts['data']),
+                'total_groups' => count($groups['data']),
+                'unsubscribed_count' => count($unsubscribed['data']),
+                'contacts' => $contacts['data'],
+                'groups' => $groups['data']
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-    }
-
-    private function shouldAttemptReset(): bool
-    {
-        return $this->lastFailureTime !== null &&
-               (time() - $this->lastFailureTime) >= self::RECOVERY_TIMEOUT;
     }
 }
 ```
 
-#### Logging estructurado de errores
+### Ejemplo Completo de OTP
 
 ```php
-class ConvoChatErrorLogger
+<?php
+
+use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
+
+class OtpController extends Controller
 {
-    public static function logError(Exception $e, array $context = []): void
+    public function sendVerificationCode(Request $request)
     {
-        $errorData = [
-            'error_type' => get_class($e),
-            'error_message' => $e->getMessage(),
-            'error_code' => $e->getCode(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'timestamp' => now()->toISOString(),
-            'context' => $context
-        ];
-
-        // Log específico por tipo de error
-        if ($e instanceof ConvoChatApiException) {
-            $errorData['api_error_code'] = $e->getApiErrorCode();
-            $errorData['api_response'] = $e->getApiResponse();
-        }
-
-        if ($e instanceof ConvoChatConnectionException) {
-            $errorData['connection_timeout'] = $e->getTimeout();
-            $errorData['endpoint'] = $e->getEndpoint();
-        }
-
-        logger()->error('ConvoChat Error', $errorData);
-
-        // Enviar a servicio de monitoreo si está configurado
-        if (config('convochat.monitoring.enabled')) {
-            self::sendToMonitoring($errorData);
+        try {
+            $phone = $request->input('phone');
+            $type = $request->input('type', 'sms'); // sms o whatsapp
+            
+            $result = ConvoChat::otp()->sendOtp([
+                'type' => $type,
+                'message' => 'Tu código de verificación es {{otp}}. Válido por 5 minutos.',
+                'phone' => $phone,
+                'expire' => 300,
+                'priority' => 1,
+                'mode' => 'credits',
+                'gateway' => 'gateway456'
+            ]);
+            
+            // Guardar el OTP en sesión o caché para verificación posterior
+            session(['otp_phone' => $phone, 'otp_code' => $result['data']['otp']]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => 'Código enviado exitosamente',
+                'expires_in' => 300
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
-    private static function sendToMonitoring(array $errorData): void
+    
+    public function verifyCode(Request $request)
     {
-        // Integración con Sentry, Bugsnag, etc.
-        if (app()->bound('sentry')) {
-            app('sentry')->captureException(
-                new Exception($errorData['error_message']),
-                $errorData
-            );
+        try {
+            $otp = $request->input('otp');
+            $phone = $request->input('phone');
+            
+            // Verificar OTP
+            $result = ConvoChat::otp()->verifyOtp($otp);
+            
+            if ($result['status'] == 200) {
+                // OTP válido, proceder con la verificación
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Código verificado exitosamente'
+                ]);
+            } else {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Código inválido'
+                ], 400);
+            }
+            
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-}
-
-// Uso en try-catch
-try {
-    $result = ConvoChat::sms()->sendSmsWithDevice($phone, $message, $deviceId);
-} catch (Exception $e) {
-    ConvoChatErrorLogger::logError($e, [
-        'phone' => $phone,
-        'device_id' => $deviceId,
-        'message_length' => strlen($message)
-    ]);
-
-    throw $e;
 }
 ```
 
-## 📊 Logging
+## ⚠️ Manejo de Errores
 
-Para debug, habilita logs en `.env`:
+### Estructura de Respuesta de Error
+
+```php
+try {
+    $result = ConvoChat::sms()->sendSms($params);
+} catch (\Exception $e) {
+    // El SDK lanza excepciones para errores de API
+    Log::error('ConvoChat Error: ' . $e->getMessage());
+    
+    return response()->json([
+        'success' => false,
+        'error' => $e->getMessage()
+    ], 500);
+}
+```
+
+### Códigos de Error Comunes
+
+- **400** - Parámetros inválidos o faltantes
+- **401** - API key inválida o faltante
+- **403** - Permisos insuficientes
+- **404** - Recurso no encontrado
+- **429** - Límite de velocidad excedido
+- **500** - Error interno del servidor
+
+### Validación de Parámetros
+
+```php
+// El SDK valida automáticamente parámetros requeridos
+try {
+    $result = ConvoChat::sms()->sendSms([
+        'phone' => '+522221234567',
+        // 'message' faltante - lanzará InvalidArgumentException
+    ]);
+} catch (\InvalidArgumentException $e) {
+    // Manejar error de validación
+    return response()->json(['error' => $e->getMessage()], 400);
+}
+```
+
+## 📝 Logging
+
+### Habilitar Logging
 
 ```env
 CONVOCHAT_LOG_REQUESTS=true
 ```
 
-Los logs aparecerán en `storage/logs/laravel.log`.
-
-## 🎯 Casos de Uso Comunes
-
-### Sistema de OTP/Verificación
+### Configuración de Logs
 
 ```php
-class OTPService
-{
-    public function sendOTP(string $phone): string
-    {
-        $otp = rand(100000, 999999);
-
-        ConvoChat::sms()->sendSmsWithCredits(
-            phone: $phone,
-            message: "Tu código de verificación es: {$otp}"
-        );
-
-        // Guardar OTP en cache/base de datos
-        Cache::put("otp_{$phone}", $otp, 300); // 5 min
-
-        return $otp;
-    }
-}
+// En config/logging.php
+'channels' => [
+    'convochat' => [
+        'driver' => 'single',
+        'path' => storage_path('logs/convochat.log'),
+        'level' => 'info',
+    ],
+],
 ```
 
-### Notificaciones de Pedidos
+### Ejemplo de Logs
 
 ```php
-class OrderService
-{
-    public function notifyOrderStatus(Order $order, string $status)
-    {
-        $message = match($status) {
-            'confirmed' => "✅ Pedido #{$order->id} confirmado",
-            'shipped' => "🚚 Pedido #{$order->id} enviado",
-            'delivered' => "📦 Pedido #{$order->id} entregado",
-        };
+// Los logs incluyen:
+// - Endpoint llamado
+// - Parámetros de la petición (con datos sensibles redactados)
+// - Respuesta de la API
+// - Tiempo de ejecución
+// - Errores detallados
 
-        // SMS
-        ConvoChat::sms()->sendSmsWithCredits($order->phone, $message);
+[2024-01-15 10:30:45] local.INFO: ConvoChat SMS API Request Success {"endpoint":"/send/sms","response_status":"200","request_time":"2024-01-15 10:30:45","base_url":"https://sms.convo.chat/api"}
 
-        // WhatsApp con más detalle
-        ConvoChat::whatsapp()->sendText(
-            config('convochat.whatsapp.default_account'),
-            $order->phone,
-            $message . "\n\nRastrear: " . route('track.order', $order->id)
-        );
-    }
-}
+[2024-01-15 10:31:12] local.ERROR: ConvoChat SMS API Error {"endpoint":"/send/sms","error_message":"Invalid phone number","error_code":400,"request_data":{"phone":"+522221234567","message":"Test","secret":"[REDACTED]"},"base_url":"https://sms.convo.chat/api","timeout":30,"request_time":"2024-01-15 10:31:12"}
 ```
 
 ## 🔧 Configuración Avanzada
 
-### Configuración completa del archivo config/convochat.php
+### Configuración Personalizada
 
 ```php
-<?php
-
+// En config/convochat.php
 return [
-    /*
-    |--------------------------------------------------------------------------
-    | ConvoChat API Configuration
-    |--------------------------------------------------------------------------
-    */
     'api_key' => env('CONVOCHAT_API_KEY'),
     'base_url' => env('CONVOCHAT_BASE_URL', 'https://sms.convo.chat/api'),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Connection Settings
-    |--------------------------------------------------------------------------
-    */
     'timeout' => env('CONVOCHAT_TIMEOUT', 30),
-    'connect_timeout' => env('CONVOCHAT_CONNECT_TIMEOUT', 10),
-    'retries' => env('CONVOCHAT_RETRIES', 3),
-    'retry_delay' => env('CONVOCHAT_RETRY_DELAY', 1000), // milisegundos
-
-    /*
-    |--------------------------------------------------------------------------
-    | SMS Configuration
-    |--------------------------------------------------------------------------
-    */
-    'sms' => [
-        'mode' => env('CONVOCHAT_SMS_MODE', 'devices'), // 'devices' o 'credits'
-        'priority' => env('CONVOCHAT_SMS_PRIORITY', 2), // 1=alta, 2=normal
-        'default_device' => env('CONVOCHAT_SMS_DEVICE'),
-        'default_sim' => env('CONVOCHAT_SMS_SIM', 1),
-        'fallback_enabled' => env('CONVOCHAT_SMS_FALLBACK', true),
-        'fallback_mode' => env('CONVOCHAT_SMS_FALLBACK_MODE', 'credits'),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | WhatsApp Configuration
-    |--------------------------------------------------------------------------
-    */
-    'whatsapp' => [
-        'default_account' => env('CONVOCHAT_WA_ACCOUNT'),
-        'priority' => env('CONVOCHAT_WA_PRIORITY', 2),
-        'enable_receipts' => env('CONVOCHAT_WA_RECEIPTS', true),
-        'enable_typing' => env('CONVOCHAT_WA_TYPING', true),
-        'max_media_size' => env('CONVOCHAT_WA_MAX_MEDIA_SIZE', 16777216), // 16MB
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Logging Configuration
-    |--------------------------------------------------------------------------
-    */
-    'logging' => [
-        'enabled' => env('CONVOCHAT_LOG_REQUESTS', false),
-        'level' => env('CONVOCHAT_LOG_LEVEL', 'info'),
-        'channel' => env('CONVOCHAT_LOG_CHANNEL', 'single'),
-        'log_responses' => env('CONVOCHAT_LOG_RESPONSES', false),
-        'log_sensitive_data' => env('CONVOCHAT_LOG_SENSITIVE', false),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Rate Limiting
-    |--------------------------------------------------------------------------
-    */
-    'rate_limiting' => [
-        'enabled' => env('CONVOCHAT_RATE_LIMITING', true),
-        'max_requests_per_minute' => env('CONVOCHAT_MAX_REQUESTS_PER_MINUTE', 60),
-        'burst_limit' => env('CONVOCHAT_BURST_LIMIT', 10),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Circuit Breaker Configuration
-    |--------------------------------------------------------------------------
-    */
-    'circuit_breaker' => [
-        'enabled' => env('CONVOCHAT_CIRCUIT_BREAKER', false),
-        'failure_threshold' => env('CONVOCHAT_FAILURE_THRESHOLD', 5),
-        'recovery_timeout' => env('CONVOCHAT_RECOVERY_TIMEOUT', 300),
-        'success_threshold' => env('CONVOCHAT_SUCCESS_THRESHOLD', 3),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Monitoring and Health Checks
-    |--------------------------------------------------------------------------
-    */
-    'monitoring' => [
-        'enabled' => env('CONVOCHAT_MONITORING', false),
-        'health_check_interval' => env('CONVOCHAT_HEALTH_CHECK_INTERVAL', 300),
-        'metrics_enabled' => env('CONVOCHAT_METRICS', false),
-        'alerts_enabled' => env('CONVOCHAT_ALERTS', false),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Queue Configuration
-    |--------------------------------------------------------------------------
-    */
-    'queue' => [
-        'enabled' => env('CONVOCHAT_QUEUE_ENABLED', false),
-        'connection' => env('CONVOCHAT_QUEUE_CONNECTION', 'default'),
-        'queue_name' => env('CONVOCHAT_QUEUE_NAME', 'convochat'),
-        'max_attempts' => env('CONVOCHAT_QUEUE_MAX_ATTEMPTS', 3),
-        'backoff' => env('CONVOCHAT_QUEUE_BACKOFF', 60),
-    ],
-
-    /*
-    |--------------------------------------------------------------------------
-    | Environment-specific Configuration
-    |--------------------------------------------------------------------------
-    */
-    'environments' => [
-        'testing' => [
-            'mock_responses' => env('CONVOCHAT_MOCK_RESPONSES', true),
-            'log_all_requests' => true,
-        ],
-        'staging' => [
-            'rate_limiting' => ['max_requests_per_minute' => 30],
-            'logging' => ['level' => 'debug'],
-        ],
-        'production' => [
-            'logging' => ['log_sensitive_data' => false],
-            'monitoring' => ['enabled' => true],
-        ],
-    ],
+    'log_requests' => env('CONVOCHAT_LOG_REQUESTS', false),
 ];
 ```
 
-### Variables de entorno recomendadas
-
-```env
-# API Configuration
-CONVOCHAT_API_KEY=your_api_key_here
-CONVOCHAT_BASE_URL=https://sms.convo.chat/api
-
-# Connection Settings
-CONVOCHAT_TIMEOUT=30
-CONVOCHAT_CONNECT_TIMEOUT=10
-CONVOCHAT_RETRIES=3
-
-# SMS Settings
-CONVOCHAT_SMS_MODE=devices
-CONVOCHAT_SMS_PRIORITY=2
-CONVOCHAT_SMS_DEVICE=your_device_id
-CONVOCHAT_SMS_SIM=1
-CONVOCHAT_SMS_FALLBACK=true
-
-# WhatsApp Settings
-CONVOCHAT_WA_ACCOUNT=your_whatsapp_account_id
-CONVOCHAT_WA_PRIORITY=2
-CONVOCHAT_WA_RECEIPTS=true
-
-# Logging
-CONVOCHAT_LOG_REQUESTS=false
-CONVOCHAT_LOG_LEVEL=info
-CONVOCHAT_LOG_RESPONSES=false
-
-# Performance
-CONVOCHAT_RATE_LIMITING=true
-CONVOCHAT_MAX_REQUESTS_PER_MINUTE=60
-CONVOCHAT_CIRCUIT_BREAKER=true
-
-# Monitoring (Producción)
-CONVOCHAT_MONITORING=true
-CONVOCHAT_METRICS=true
-CONVOCHAT_ALERTS=true
-
-# Queue (Para envíos masivos)
-CONVOCHAT_QUEUE_ENABLED=true
-CONVOCHAT_QUEUE_CONNECTION=redis
-CONVOCHAT_QUEUE_NAME=convochat
-```
-
-### Configuración por entorno
+### Inyección de Dependencias
 
 ```php
-// En config/convochat.php - configuración dinámica por entorno
-$config = [
-    // ... configuración base
-];
-
-// Aplicar configuraciones específicas por entorno
-$environment = app()->environment();
-if (isset($config['environments'][$environment])) {
-    $config = array_merge_recursive($config, $config['environments'][$environment]);
-}
-
-return $config;
-```
-
-## 🧪 Testing y Debugging
-
-### Tests unitarios con PHPUnit
-
-```php
-<?php
-
-use Tests\TestCase;
-use ConvoChat\LaravelSmsGateway\Facades\ConvoChat;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-use Illuminate\Support\Facades\Http;
 
-class ConvoChatSmsTest extends TestCase
+class MyController extends Controller
 {
-    public function setUp(): void
+    protected ConvoChatSmsService $smsService;
+    
+    public function __construct(ConvoChatSmsService $smsService)
     {
-        parent::setUp();
-
-        // Configurar entorno de prueba
-        config([
-            'convochat.api_key' => 'test_key',
-            'convochat.base_url' => 'https://test.convo.chat/api',
-            'convochat.sms.default_device' => 'test_device'
-        ]);
+        $this->smsService = $smsService;
     }
-
-    /** @test */
-    public function it_can_send_sms_with_device()
+    
+    public function sendSms()
     {
-        // Mock de respuesta exitosa
-        Http::fake([
-            'test.convo.chat/*' => Http::response([
-                'status' => 'success',
-                'message_id' => 'msg_123456',
-                'credits_used' => 1
-            ], 200)
+        $result = $this->smsService->sendSms([
+            'phone' => '+522221234567',
+            'message' => 'Mensaje desde inyección de dependencias',
+            'mode' => 'devices'
         ]);
-
-        $result = ConvoChat::sms()->sendSmsWithDevice(
-            '+573001234567',
-            'Test message',
-            'test_device'
-        );
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertArrayHasKey('message_id', $result);
-    }
-
-    /** @test */
-    public function it_handles_api_errors_gracefully()
-    {
-        Http::fake([
-            'test.convo.chat/*' => Http::response([
-                'status' => 'error',
-                'error_code' => 'INVALID_DEVICE',
-                'message' => 'Device not found'
-            ], 400)
-        ]);
-
-        $result = ConvoChat::sms()->sendSmsWithDevice(
-            '+573001234567',
-            'Test message',
-            'invalid_device'
-        );
-
-        $this->assertEquals('error', $result['status']);
-        $this->assertEquals('INVALID_DEVICE', $result['error_code']);
-    }
-
-    /** @test */
-    public function it_retries_on_connection_failure()
-    {
-        Http::fake([
-            'test.convo.chat/*' => Http::sequence()
-                ->pushStatus(500) // Primera llamada falla
-                ->pushStatus(500) // Segunda llamada falla
-                ->push([           // Tercera llamada exitosa
-                    'status' => 'success',
-                    'message_id' => 'msg_retry_123'
-                ])
-        ]);
-
-        $retryService = new ConvoChatRetryService();
-        $result = $retryService->sendWithRetry(
-            fn() => ConvoChat::sms()->sendSmsWithDevice('+573001234567', 'Test', 'device'),
-            []
-        );
-
-        $this->assertEquals('success', $result['status']);
+        
+        return response()->json($result);
     }
 }
 ```
 
-### Test de integración con WhatsApp
+### Configuración de Cliente HTTP Personalizado
 
 ```php
-class ConvoChatWhatsAppTest extends TestCase
-{
-    /** @test */
-    public function it_can_send_whatsapp_message()
-    {
-        Http::fake([
-            'test.convo.chat/*' => Http::response([
-                'status' => 'success',
-                'message_id' => 'wa_msg_123',
-                'account_id' => 'wa_account_test'
-            ], 200)
-        ]);
+use GuzzleHttp\Client;
+use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
 
-        $result = ConvoChat::whatsapp()->sendText(
-            'wa_account_test',
-            '+573001234567',
-            'Hello WhatsApp!'
-        );
+$client = new Client([
+    'timeout' => 60,
+    'verify' => false, // Solo para desarrollo
+    'headers' => [
+        'User-Agent' => 'MyApp/1.0'
+    ]
+]);
 
-        $this->assertEquals('success', $result['status']);
-        $this->assertStringStartsWith('wa_msg_', $result['message_id']);
-    }
-
-    /** @test */
-    public function it_validates_media_size_for_whatsapp()
-    {
-        $this->expectException(InvalidArgumentException::class);
-
-        ConvoChat::whatsapp()->sendMedia(
-            'wa_account_test',
-            '+573001234567',
-            'Large file',
-            'https://example.com/large_file.mp4', // > 16MB
-            'video'
-        );
-    }
-}
-```
-
-### Debugging avanzado
-
-```php
-// Habilitar debugging completo en .env
-CONVOCHAT_LOG_REQUESTS=true
-CONVOCHAT_LOG_RESPONSES=true
-CONVOCHAT_LOG_LEVEL=debug
-CONVOCHAT_LOG_SENSITIVE=true // ¡Solo en desarrollo!
-
-// Debug helper personalizado
-class ConvoChatDebugger
-{
-    public static function enableVerboseLogging(): void
-    {
-        config([
-            'convochat.logging.enabled' => true,
-            'convochat.logging.level' => 'debug',
-            'convochat.logging.log_responses' => true,
-        ]);
-    }
-
-    public static function dumpLastRequest(): array
-    {
-        return cache()->get('convochat.last_request', []);
-    }
-
-    public static function dumpLastResponse(): array
-    {
-        return cache()->get('convochat.last_response', []);
-    }
-
-    public static function simulateApiError(string $errorCode = 'TEST_ERROR'): void
-    {
-        Http::fake([
-            '*convo.chat/*' => Http::response([
-                'status' => 'error',
-                'error_code' => $errorCode,
-                'message' => 'Simulated error for testing'
-            ], 400)
-        ]);
-    }
-}
-
-// Uso en desarrollo
-ConvoChatDebugger::enableVerboseLogging();
-$result = ConvoChat::sms()->sendSmsWithDevice($phone, $message, $device);
-dd(ConvoChatDebugger::dumpLastRequest(), ConvoChatDebugger::dumpLastResponse());
-```
-
-### Testing con Factory Pattern
-
-```php
-// Factory para crear datos de prueba
-class ConvoChatTestFactory
-{
-    public static function smsResponse(array $overrides = []): array
-    {
-        return array_merge([
-            'status' => 'success',
-            'message_id' => 'sms_' . uniqid(),
-            'credits_used' => 1,
-            'device_id' => 'test_device',
-            'timestamp' => now()->toISOString()
-        ], $overrides);
-    }
-
-    public static function whatsappResponse(array $overrides = []): array
-    {
-        return array_merge([
-            'status' => 'success',
-            'message_id' => 'wa_' . uniqid(),
-            'account_id' => 'wa_test_account',
-            'timestamp' => now()->toISOString()
-        ], $overrides);
-    }
-
-    public static function errorResponse(string $errorCode = 'GENERIC_ERROR'): array
-    {
-        return [
-            'status' => 'error',
-            'error_code' => $errorCode,
-            'message' => 'Test error response',
-            'timestamp' => now()->toISOString()
-        ];
-    }
-}
-
-// Uso en tests
-Http::fake([
-    '*' => Http::response(ConvoChatTestFactory::smsResponse())
+$smsService = new ConvoChatSmsService($client, [
+    'api_key' => 'tu_api_key',
+    'base_url' => 'https://sms.convo.chat/api',
+    'timeout' => 60
 ]);
 ```
 
-## 🔍 Troubleshooting
-
-### Problemas comunes y soluciones
-
-#### 1. Error de autenticación
-
-**Problema:** `401 Unauthorized`
-
-```bash
-# Verificar API key
-php artisan tinker
->>> config('convochat.api_key')
->>> env('CONVOCHAT_API_KEY')
-```
-
-**Soluciones:**
-- Verificar que la API key esté correctamente configurada en `.env`
-- Confirmar que la API key sea válida en el dashboard
-- Limpiar cache de configuración: `php artisan config:clear`
-
-#### 2. Timeout de conexión
-
-**Problema:** `Connection timeout after 30 seconds`
-
-**Soluciones:**
-```php
-// Aumentar timeout en config/convochat.php
-'timeout' => 60,
-'connect_timeout' => 20,
-
-// O en .env
-CONVOCHAT_TIMEOUT=60
-CONVOCHAT_CONNECT_TIMEOUT=20
-```
-
-#### 3. Device no encontrado
-
-**Problema:** `Device not found or offline`
-
-**Verificación:**
-```php
-// Listar dispositivos disponibles
-$devices = ConvoChat::sms()->getDevices();
-foreach ($devices as $device) {
-    echo "Device: {$device['id']} - Status: {$device['status']}\n";
-}
-```
-
-**Soluciones:**
-- Verificar que el dispositivo esté conectado
-- Usar fallback a créditos si está configurado
-- Verificar permisos del dispositivo
-
-#### 4. Problemas con WhatsApp
-
-**Problema:** `WhatsApp account not linked`
-
-**Diagnóstico:**
-```php
-// Verificar cuentas vinculadas
-$accounts = ConvoChat::whatsapp()->getWhatsAppAccounts();
-var_dump($accounts);
-
-// Verificar estado de la cuenta
-$status = ConvoChat::whatsapp()->getAccountStatus('your_account_id');
-var_dump($status);
-```
-
-#### 5. Rate limiting
-
-**Problema:** `Rate limit exceeded`
-
-**Solución:**
-```php
-// Implementar rate limiting local
-class ConvoChatRateLimiter
-{
-    public function attempt(callable $function, int $maxAttempts = 60): mixed
-    {
-        $key = 'convochat_rate_limit_' . auth()->id();
-
-        if (Cache::get($key, 0) >= $maxAttempts) {
-            throw new Exception('Rate limit exceeded');
-        }
-
-        Cache::increment($key, 1);
-        Cache::expire($key, 60); // 1 minuto
-
-        return $function();
-    }
-}
-```
-
-### Herramientas de diagnóstico
-
-```php
-// Comando Artisan para diagnóstico
-php artisan make:command ConvoChatDiagnose
-
-class ConvoChatDiagnose extends Command
-{
-    protected $signature = 'convochat:diagnose';
-    protected $description = 'Diagnose ConvoChat configuration and connectivity';
-
-    public function handle()
-    {
-        $this->info('ConvoChat Diagnostic Tool');
-        $this->line('================================');
-
-        // Test 1: Configuration
-        $this->checkConfiguration();
-
-        // Test 2: Connectivity
-        $this->checkConnectivity();
-
-        // Test 3: API key validity
-        $this->checkApiKey();
-
-        // Test 4: Device status
-        $this->checkDevices();
-
-        // Test 5: WhatsApp accounts
-        $this->checkWhatsAppAccounts();
-    }
-
-    private function checkConfiguration(): void
-    {
-        $this->info('Checking configuration...');
-
-        $apiKey = config('convochat.api_key');
-        $baseUrl = config('convochat.base_url');
-
-        $this->line("API Key: " . ($apiKey ? 'Set' : 'Missing'));
-        $this->line("Base URL: " . $baseUrl);
-
-        if (!$apiKey) {
-            $this->error('❌ API Key not configured');
-            return;
-        }
-
-        $this->info('✅ Configuration OK');
-    }
-
-    private function checkConnectivity(): void
-    {
-        $this->info('Checking connectivity...');
-
-        try {
-            $response = Http::timeout(10)->get(config('convochat.base_url') . '/health');
-
-            if ($response->successful()) {
-                $this->info('✅ Connectivity OK');
-            } else {
-                $this->error('❌ Connectivity failed: ' . $response->status());
-            }
-        } catch (Exception $e) {
-            $this->error('❌ Connectivity error: ' . $e->getMessage());
-        }
-    }
-
-    private function checkApiKey(): void
-    {
-        $this->info('Checking API key validity...');
-
-        try {
-            $credits = ConvoChat::sms()->getCredits();
-            $this->info('✅ API Key valid - Credits: ' . $credits['balance']);
-        } catch (Exception $e) {
-            $this->error('❌ API Key invalid: ' . $e->getMessage());
-        }
-    }
-
-    private function checkDevices(): void
-    {
-        $this->info('Checking SMS devices...');
-
-        try {
-            $devices = ConvoChat::sms()->getDevices();
-            $this->info('✅ Found ' . count($devices) . ' devices');
-
-            foreach ($devices as $device) {
-                $status = $device['status'] === 'online' ? '✅' : '❌';
-                $this->line("  {$status} {$device['name']} ({$device['id']})");
-            }
-        } catch (Exception $e) {
-            $this->error('❌ Device check failed: ' . $e->getMessage());
-        }
-    }
-
-    private function checkWhatsAppAccounts(): void
-    {
-        $this->info('Checking WhatsApp accounts...');
-
-        try {
-            $accounts = ConvoChat::whatsapp()->getWhatsAppAccounts();
-            $this->info('✅ Found ' . count($accounts) . ' WhatsApp accounts');
-
-            foreach ($accounts as $account) {
-                $status = $account['status'] === 'connected' ? '✅' : '❌';
-                $this->line("  {$status} {$account['number']} ({$account['id']})");
-            }
-        } catch (Exception $e) {
-            $this->error('❌ WhatsApp check failed: ' . $e->getMessage());
-        }
-    }
-}
-```
-
-## 🚀 Performance Optimization
-
-### Optimizaciones para envíos masivos
-
-#### 1. Queue-based bulk sending
-
-```php
-// Job para envío masivo optimizado
-class BulkSmsJob implements ShouldQueue
-{
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-    public $tries = 3;
-    public $backoff = [30, 60, 120]; // Progressive backoff
-
-    public function __construct(
-        private array $recipients,
-        private string $message,
-        private array $options = []
-    ) {}
-
-    public function handle(ConvoChatSmsService $smsService): void
-    {
-        $batchSize = config('convochat.queue.batch_size', 10);
-        $chunks = array_chunk($this->recipients, $batchSize);
-
-        foreach ($chunks as $chunk) {
-            $this->processBatch($smsService, $chunk);
-
-            // Rate limiting entre batches
-            usleep(config('convochat.queue.batch_delay', 100000)); // 100ms
-        }
-    }
-
-    private function processBatch(ConvoChatSmsService $smsService, array $recipients): void
-    {
-        $promises = [];
-
-        foreach ($recipients as $phone) {
-            $promises[] = $this->sendAsync($smsService, $phone);
-        }
-
-        // Procesar todas las promesas en paralelo
-        Promise::settle($promises)->wait();
-    }
-
-    private function sendAsync(ConvoChatSmsService $smsService, string $phone): PromiseInterface
-    {
-        return $smsService->sendSmsWithCreditsAsync($phone, $this->message);
-    }
-}
-
-// Dispatcher optimizado
-class BulkSmsDispatcher
-{
-    public function sendBulkSms(array $recipients, string $message): void
-    {
-        $maxChunkSize = config('convochat.performance.max_chunk_size', 1000);
-        $chunks = array_chunk($recipients, $maxChunkSize);
-
-        foreach ($chunks as $index => $chunk) {
-            dispatch(new BulkSmsJob($chunk, $message))
-                ->onQueue('convochat-bulk')
-                ->delay(now()->addSeconds($index * 5)); // Spread load
-        }
-    }
-}
-```
-
-#### 2. Connection pooling y reuso
-
-```php
-class ConvoChatConnectionPool
-{
-    private static array $pool = [];
-    private const MAX_CONNECTIONS = 10;
-
-    public static function getConnection(): GuzzleHttp\Client
-    {
-        if (count(self::$pool) < self::MAX_CONNECTIONS) {
-            self::$pool[] = new GuzzleHttp\Client([
-                'base_uri' => config('convochat.base_url'),
-                'timeout' => config('convochat.timeout'),
-                'headers' => [
-                    'Authorization' => 'Bearer ' . config('convochat.api_key'),
-                    'Accept' => 'application/json',
-                ],
-                'http_errors' => false,
-            ]);
-        }
-
-        return self::$pool[array_rand(self::$pool)];
-    }
-
-    public static function releaseConnection(GuzzleHttp\Client $client): void
-    {
-        // Implementar lógica de release si es necesario
-    }
-}
-```
-
-#### 3. Caché inteligente
-
-```php
-class ConvoChatCache
-{
-    private const CACHE_TTL = [
-        'devices' => 300,        // 5 minutos
-        'credits' => 60,         // 1 minuto
-        'accounts' => 600,       // 10 minutos
-        'rates' => 3600,         // 1 hora
-    ];
-
-    public static function remember(string $type, string $key, callable $callback): mixed
-    {
-        $cacheKey = "convochat.{$type}.{$key}";
-        $ttl = self::CACHE_TTL[$type] ?? 300;
-
-        return Cache::remember($cacheKey, $ttl, $callback);
-    }
-
-    public static function invalidate(string $type, string $key = '*'): void
-    {
-        if ($key === '*') {
-            Cache::flush(); // Solo en desarrollo
-        } else {
-            Cache::forget("convochat.{$type}.{$key}");
-        }
-    }
-
-    // Caché con warming estratégico
-    public static function warmUp(): void
-    {
-        // Pre-cargar datos frecuentemente accedidos
-        self::remember('devices', 'all', fn() => ConvoChat::sms()->getDevices());
-        self::remember('credits', 'balance', fn() => ConvoChat::sms()->getCredits());
-        self::remember('accounts', 'whatsapp', fn() => ConvoChat::whatsapp()->getWhatsAppAccounts());
-    }
-}
-
-// Comando para warming
-php artisan make:command ConvoChatWarmCache
-
-class ConvoChatWarmCache extends Command
-{
-    protected $signature = 'convochat:warm-cache';
-
-    public function handle()
-    {
-        ConvoChatCache::warmUp();
-        $this->info('ConvoChat cache warmed successfully');
-    }
-}
-```
-
-#### 4. Monitoring de performance
-
-```php
-class ConvoChatPerformanceMonitor
-{
-    public function measureRequest(callable $operation, array $context = []): array
-    {
-        $startTime = microtime(true);
-        $startMemory = memory_get_usage(true);
-
-        try {
-            $result = $operation();
-            $success = true;
-        } catch (Exception $e) {
-            $result = null;
-            $success = false;
-            $error = $e->getMessage();
-        }
-
-        $metrics = [
-            'duration' => (microtime(true) - $startTime) * 1000, // ms
-            'memory' => memory_get_usage(true) - $startMemory,
-            'success' => $success,
-            'timestamp' => now()->toISOString(),
-            'context' => $context
-        ];
-
-        if (isset($error)) {
-            $metrics['error'] = $error;
-        }
-
-        $this->recordMetrics($metrics);
-
-        return $result;
-    }
-
-    private function recordMetrics(array $metrics): void
-    {
-        // Log métricas
-        logger()->info('ConvoChat Performance', $metrics);
-
-        // Enviar a sistema de métricas (InfluxDB, CloudWatch, etc.)
-        if (config('convochat.monitoring.metrics_enabled')) {
-            $this->sendToMetricsBackend($metrics);
-        }
-
-        // Alertas por performance degradada
-        if ($metrics['duration'] > config('convochat.performance.alert_threshold', 5000)) {
-            $this->sendPerformanceAlert($metrics);
-        }
-    }
-}
-```
-
-## 🔒 Security Best Practices
-
-### 1. Protección de API Keys
-
-```php
-// Service Provider para cifrado de claves sensibles
-class ConvoChatSecurityProvider extends ServiceProvider
-{
-    public function register(): void
-    {
-        $this->app->singleton('convochat.secure_config', function () {
-            return new SecureConfigManager();
-        });
-    }
-}
-
-class SecureConfigManager
-{
-    public function getSecureApiKey(): string
-    {
-        $encryptedKey = config('convochat.encrypted_api_key');
-
-        if ($encryptedKey) {
-            return decrypt($encryptedKey);
-        }
-
-        return config('convochat.api_key');
-    }
-
-    public function setSecureApiKey(string $apiKey): void
-    {
-        $encrypted = encrypt($apiKey);
-
-        // Guardar de forma segura
-        Cache::put('convochat.secure_api_key', $encrypted, now()->addHours(24));
-    }
-}
-```
-
-### 2. Validación y sanitización de datos
-
-```php
-class ConvoChatValidator
-{
-    public static function validatePhone(string $phone): string
-    {
-        // Eliminar caracteres no numéricos excepto +
-        $phone = preg_replace('/[^\d+]/', '', $phone);
-
-        // Validar formato internacional
-        if (!preg_match('/^\+[1-9]\d{1,14}$/', $phone)) {
-            throw new InvalidArgumentException('Invalid phone number format');
-        }
-
-        return $phone;
-    }
-
-    public static function sanitizeMessage(string $message): string
-    {
-        // Eliminar caracteres peligrosos
-        $message = strip_tags($message);
-        $message = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
-
-        // Limitar longitud
-        if (strlen($message) > 1600) {
-            throw new InvalidArgumentException('Message too long');
-        }
-
-        return $message;
-    }
-
-    public static function validateMediaUrl(string $url): string
-    {
-        // Validar URL
-        if (!filter_var($url, FILTER_VALIDATE_URL)) {
-            throw new InvalidArgumentException('Invalid media URL');
-        }
-
-        // Verificar esquema permitido
-        $allowedSchemes = ['https'];
-        $scheme = parse_url($url, PHP_URL_SCHEME);
-
-        if (!in_array($scheme, $allowedSchemes)) {
-            throw new InvalidArgumentException('Only HTTPS URLs are allowed');
-        }
-
-        return $url;
-    }
-}
-
-// Middleware para validación automática
-class ConvoChatValidationMiddleware
-{
-    public function handle($request, Closure $next)
-    {
-        if ($request->has('phone')) {
-            $request->merge([
-                'phone' => ConvoChatValidator::validatePhone($request->phone)
-            ]);
-        }
-
-        if ($request->has('message')) {
-            $request->merge([
-                'message' => ConvoChatValidator::sanitizeMessage($request->message)
-            ]);
-        }
-
-        return $next($request);
-    }
-}
-```
-
-### 3. Rate limiting por usuario
-
-```php
-class ConvoChatUserRateLimiter
-{
-    public function attempt(int $userId, string $action, int $maxAttempts = 60): bool
-    {
-        $key = "convochat_rate_limit_{$action}_{$userId}";
-
-        $attempts = Cache::get($key, 0);
-
-        if ($attempts >= $maxAttempts) {
-            return false;
-        }
-
-        Cache::put($key, $attempts + 1, now()->addMinutes(1));
-
-        return true;
-    }
-
-    public function getRemainingAttempts(int $userId, string $action, int $maxAttempts = 60): int
-    {
-        $key = "convochat_rate_limit_{$action}_{$userId}";
-        $attempts = Cache::get($key, 0);
-
-        return max(0, $maxAttempts - $attempts);
-    }
-}
-
-// Uso en controlador
-class SecureNotificationController extends Controller
-{
-    public function sendSms(Request $request, ConvoChatUserRateLimiter $rateLimiter)
-    {
-        $userId = auth()->id();
-
-        if (!$rateLimiter->attempt($userId, 'sms', 10)) {
-            return response()->json([
-                'error' => 'Rate limit exceeded',
-                'retry_after' => 60
-            ], 429);
-        }
-
-        // Proceder con el envío...
-    }
-}
-```
-
-### 4. Audit logging
-
-```php
-class ConvoChatAuditLogger
-{
-    public static function logOperation(string $operation, array $data = []): void
-    {
-        $auditData = [
-            'user_id' => auth()->id(),
-            'operation' => $operation,
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'timestamp' => now()->toISOString(),
-            'data' => $data
-        ];
-
-        // Remover datos sensibles del log
-        unset($auditData['data']['api_key']);
-        unset($auditData['data']['password']);
-
-        logger()->info('ConvoChat Audit', $auditData);
-
-        // Enviar a sistema de auditoría externa
-        if (config('convochat.security.external_audit')) {
-            self::sendToAuditSystem($auditData);
-        }
-    }
-
-    private static function sendToAuditSystem(array $data): void
-    {
-        // Integración con sistemas de auditoría
-        Http::post(config('convochat.security.audit_endpoint'), $data);
-    }
-}
-
-// Uso automático en servicios
-class SecureConvoChatSmsService extends ConvoChatSmsService
-{
-    public function sendSmsWithDevice(string $phone, string $message, string $deviceId): array
-    {
-        ConvoChatAuditLogger::logOperation('sms_send', [
-            'phone' => substr($phone, 0, -4) . '****', // Partially mask phone
-            'device_id' => $deviceId,
-            'message_length' => strlen($message)
-        ]);
-
-        return parent::sendSmsWithDevice($phone, $message, $deviceId);
-    }
-}
-```
-
-### 5. Cifrado de mensajes sensibles
-
-```php
-class ConvoChatEncryption
-{
-    public static function encryptMessage(string $message, ?string $key = null): string
-    {
-        $key = $key ?: config('app.key');
-        return encrypt($message);
-    }
-
-    public static function decryptMessage(string $encryptedMessage, ?string $key = null): string
-    {
-        return decrypt($encryptedMessage);
-    }
-
-    public static function hashPhone(string $phone): string
-    {
-        return hash('sha256', $phone . config('app.key'));
-    }
-}
-
-// Service para mensajes cifrados
-class EncryptedMessageService
-{
-    public function sendEncryptedSms(string $phone, string $message, string $deviceId): array
-    {
-        // Cifrar mensaje antes del envío
-        $encryptedMessage = ConvoChatEncryption::encryptMessage($message);
-
-        // Guardar relación en BD para recuperar después
-        EncryptedMessage::create([
-            'phone_hash' => ConvoChatEncryption::hashPhone($phone),
-            'encrypted_content' => $encryptedMessage,
-            'sent_at' => now()
-        ]);
-
-        // Enviar mensaje sin contenido sensible
-        return ConvoChat::sms()->sendSmsWithDevice(
-            $phone,
-            'Mensaje cifrado enviado. Consulte su portal seguro.',
-            $deviceId
-        );
-    }
-}
-```
-
-## 📋 Requisitos
-
-- PHP 8.1 - 8.4
-- Laravel 10.x | 11.x | 12.x
-- Guzzle HTTP 7.0+
-- API Key válida de ConvoChat
-
-### Compatibilidad de Versiones
-
-| Laravel | PHP        | Testbench  | Support Status |
-|---------|------------|------------|----------------|
-| 10.x    | 8.1 - 8.3  | ^8.0       | ✅ Active      |
-| 11.x    | 8.2 - 8.4  | ^9.0       | ✅ Active      |
-| 12.x    | 8.2 - 8.4  | ^10.0      | ✅ Active      |
-
-> **Nota**: Laravel 9.x ya no es soportado. Si necesitas Laravel 9, usa la versión 1.x del paquete.
-
 ## 📞 Soporte
 
-- Documentación API: https://docs.convo.chat
-- Dashboard: https://sms.convo.chat
-- API Keys: https://sms.convo.chat/dashboard/tools/keys
+Para soporte técnico o preguntas sobre el SDK:
+
+- **Email:** support@convo.chat
+- **Documentación:** https://github.com/RenatoAscencio/convochatsms#readme
+- **Issues:** https://github.com/RenatoAscencio/convochatsms/issues
 
 ## 📄 Licencia
 
-MIT License
+Este SDK está licenciado bajo la Licencia MIT. Ver el archivo LICENSE para más detalles.
