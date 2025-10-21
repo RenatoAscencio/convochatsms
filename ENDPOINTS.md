@@ -641,7 +641,7 @@ class SmsServiceTest extends TestCase
         
         $smsService = new ConvoChatSmsService($client, [
             'api_key' => 'test_key',
-            'base_url' => 'https://test.api',
+            'base_url' => 'https://sms.convo.chat/api',
             'timeout' => 30
         ]);
         
