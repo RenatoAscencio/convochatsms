@@ -31,6 +31,8 @@ class ConvoChatSmsService
     public const CREDITS_ENDPOINT = '/get/credits';
     public const SUBSCRIPTION_ENDPOINT = '/get/subscription';
     public const RATES_ENDPOINT = '/get/rates';
+    public const EARNINGS_ENDPOINT = '/get/earnings';
+    public const DELETE_NOTIFICATION_ENDPOINT = '/delete/notification';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -224,6 +226,23 @@ class ConvoChatSmsService
         ];
 
         return $this->makeRequest(self::SMS_STOP_CAMPAIGN_ENDPOINT, $data, 'GET');
+    }
+
+    public function getEarnings(): array
+    {
+        return $this->makeRequest(self::EARNINGS_ENDPOINT, [
+            'secret' => $this->apiKey,
+        ], 'GET');
+    }
+
+    public function deleteNotification(int $notificationId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $notificationId,
+        ];
+
+        return $this->makeRequest(self::DELETE_NOTIFICATION_ENDPOINT, $data, 'GET');
     }
 
     protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array

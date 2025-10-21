@@ -5,6 +5,7 @@ namespace ConvoChat\LaravelSmsGateway\Facades;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatContactsService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatOtpService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
+use ConvoChat\LaravelSmsGateway\Services\ConvoChatUssdService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
 use Illuminate\Support\Facades\Facade;
 
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\Facade;
  * @method static ConvoChatWhatsAppService whatsapp()
  * @method static ConvoChatContactsService contacts()
  * @method static ConvoChatOtpService otp()
+ * @method static ConvoChatUssdService ussd()
  *
  * SMS Methods:
  * @method static array sendSms(array $params)
@@ -29,10 +31,12 @@ use Illuminate\Support\Facades\Facade;
  * @method static array deleteSmsCampaign(int $campaignId)
  * @method static array startSmsCampaign(int $campaignId)
  * @method static array stopSmsCampaign(int $campaignId)
- * @method static array getDevices()
+ * @method static array getDevices(int $limit = 10, int $page = 1)
  * @method static array getCredits()
  * @method static array getRates()
  * @method static array getSubscription()
+ * @method static array getEarnings()
+ * @method static array deleteNotification(int $notificationId)
  *
  * WhatsApp Methods:
  * @method static array sendMessage(array $params)
@@ -54,6 +58,13 @@ use Illuminate\Support\Facades\Facade;
  * @method static array validateWhatsAppNumber(string $accountId, string $phone)
  * @method static array startWhatsAppCampaign(int $campaignId)
  * @method static array stopWhatsAppCampaign(int $campaignId)
+ * @method static array getWhatsAppSubscription()
+ * @method static array linkWhatsAppAccount(?int $serverId = null)
+ * @method static array relinkWhatsAppAccount(string $uniqueId, ?int $serverId = null)
+ * @method static array deleteWhatsAppReceived(int $messageId)
+ * @method static array deleteWhatsAppSent(int $messageId)
+ * @method static array deleteWhatsAppAccount(string $uniqueId)
+ * @method static array deleteWhatsAppCampaign(int $campaignId)
  *
  * Contacts Methods:
  * @method static array getContacts(array $filters = [])
@@ -68,6 +79,11 @@ use Illuminate\Support\Facades\Facade;
  * OTP Methods:
  * @method static array sendOtp(array $params)
  * @method static array verifyOtp(string $otp)
+ *
+ * USSD Methods:
+ * @method static array sendUssd(string $code, int $sim, string $device)
+ * @method static array getUssdRequests(array $filters = [])
+ * @method static array deleteUssdRequest(int $requestId)
  */
 class ConvoChat extends Facade
 {

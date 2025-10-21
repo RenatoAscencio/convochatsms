@@ -5,6 +5,7 @@ namespace ConvoChat\LaravelSmsGateway;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatContactsService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatOtpService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
+use ConvoChat\LaravelSmsGateway\Services\ConvoChatUssdService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
 use Illuminate\Support\ServiceProvider;
 
@@ -15,20 +16,24 @@ class ConvoChatServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__ . '/../config/convochat.php', 'convochat');
 
         // Registrar todos los servicios
-        $this->app->singleton('convochat.sms', function ($app) {
+        $this->app->singleton('convochat.sms', function () {
             return new ConvoChatSmsService();
         });
 
-        $this->app->singleton('convochat.whatsapp', function ($app) {
+        $this->app->singleton('convochat.whatsapp', function () {
             return new ConvoChatWhatsAppService();
         });
 
-        $this->app->singleton('convochat.contacts', function ($app) {
+        $this->app->singleton('convochat.contacts', function () {
             return new ConvoChatContactsService();
         });
 
-        $this->app->singleton('convochat.otp', function ($app) {
+        $this->app->singleton('convochat.otp', function () {
             return new ConvoChatOtpService();
+        });
+
+        $this->app->singleton('convochat.ussd', function () {
+            return new ConvoChatUssdService();
         });
 
         $this->app->singleton('convochat', function ($app) {
@@ -59,6 +64,11 @@ class ConvoChatServiceProvider extends ServiceProvider
                 {
                     return $this->app['convochat.otp'];
                 }
+
+                public function ussd(): ConvoChatUssdService
+                {
+                    return $this->app['convochat.ussd'];
+                }
             };
         });
     }
@@ -84,6 +94,7 @@ class ConvoChatServiceProvider extends ServiceProvider
             'convochat.whatsapp',
             'convochat.contacts',
             'convochat.otp',
+            'convochat.ussd',
         ];
     }
 }

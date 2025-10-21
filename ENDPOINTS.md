@@ -22,6 +22,8 @@
 | `/get/credits`         | GET    | Créditos restantes       | -                          |
 | `/get/rates`           | GET    | Tarifas de gateways      | -                          |
 | `/get/subscription`    | GET    | Paquete de suscripción   | -                          |
+| `/get/earnings`        | GET    | Ganancias de socio       | -                          |
+| `/delete/notification` | GET    | Eliminar notificación    | `id`                       |
 
 ### 💬 WhatsApp Endpoints
 
@@ -42,7 +44,14 @@
 | `/get/wa.info`           | GET    | Información de cuenta      | `unique`                                  |
 | `/validate/whatsapp`     | GET    | Validar número             | `unique`, `phone`                         |
 | `/remote/start.chats`    | GET    | Iniciar campaña            | `campaign`                                |
-| `/remote/stop.chats`     | GET    | Detener campaña            | `campaign`                                |
+| `/remote/stop.chats`      | GET    | Detener campaña            | `campaign`                                |
+| `/get/subscription`       | GET    | Suscripción WhatsApp       | -                                         |
+| `/create/wa.link`        | GET    | Vincular cuenta WhatsApp   | `sid` (opcional)                          |
+| `/create/wa.relink`      | GET    | Re-vincular cuenta         | `unique`, `sid` (opcional)                |
+| `/delete/wa.received`    | GET    | Eliminar mensaje recibido  | `id`                                      |
+| `/delete/wa.sent`        | GET    | Eliminar mensaje enviado   | `id`                                      |
+| `/delete/wa.account`     | GET    | Eliminar cuenta WhatsApp   | `unique`                                  |
+| `/delete/wa.campaign`    | GET    | Eliminar campaña WhatsApp  | `id`                                      |
 
 ### 👥 Contacts Endpoints
 
@@ -63,6 +72,14 @@
 | ----------- | ------ | -------------------- | -------------------------- |
 | `/send/otp` | POST   | Enviar código OTP    | `type`, `message`, `phone` |
 | `/get/otp`  | GET    | Verificar código OTP | `otp`                      |
+
+### 📡 USSD Endpoints
+
+| Endpoint      | Método | Descripción              | Parámetros Requeridos      |
+| ------------- | ------ | ------------------------ | -------------------------- |
+| `/send/ussd`  | POST   | Enviar código USSD        | `code`, `sim`, `device`    |
+| `/get/ussd`   | GET    | Obtener solicitudes USSD | -                          |
+| `/delete/ussd`| GET    | Eliminar solicitud USSD  | `id`                       |
 
 ## 🔧 Ejemplos Detallados por Endpoint
 
@@ -867,6 +884,70 @@ axios.post(url, data)
     .catch(error => {
         console.error("Error:", error.response?.status, error.response?.data);
     });
+```
+
+### 📡 USSD - Envío de Código
+
+```php
+// Enviar código USSD
+$result = ConvoChat::ussd()->sendUssd(
+    code: '*123#',
+    sim: 1,
+    device: 'device123'
+);
+
+// Obtener solicitudes USSD
+$requests = ConvoChat::ussd()->getUssdRequests();
+
+// Eliminar solicitud USSD
+$deleted = ConvoChat::ussd()->deleteUssdRequest(123);
+```
+
+### 🔗 WhatsApp - Gestión de Cuentas
+
+```php
+// Vincular nueva cuenta WhatsApp
+$linkResult = ConvoChat::whatsapp()->linkWhatsAppAccount(serverId: 1);
+
+// Re-vincular cuenta existente
+$relinkResult = ConvoChat::whatsapp()->relinkWhatsAppAccount(
+    uniqueId: 'account123',
+    serverId: 1
+);
+
+// Obtener suscripción WhatsApp
+$subscription = ConvoChat::whatsapp()->getWhatsAppSubscription();
+```
+
+### 🗑️ Eliminación de Datos
+
+```php
+// Eliminar mensajes SMS
+ConvoChat::sms()->deleteSmsReceived(messageId: 123);
+ConvoChat::sms()->deleteSmsSent(messageId: 456);
+ConvoChat::sms()->deleteSmsCampaign(campaignId: 789);
+
+// Eliminar mensajes WhatsApp
+ConvoChat::whatsapp()->deleteWhatsAppReceived(messageId: 123);
+ConvoChat::whatsapp()->deleteWhatsAppSent(messageId: 456);
+ConvoChat::whatsapp()->deleteWhatsAppAccount(uniqueId: 'account123');
+ConvoChat::whatsapp()->deleteWhatsAppCampaign(campaignId: 789);
+
+// Eliminar notificaciones
+ConvoChat::sms()->deleteNotification(notificationId: 123);
+```
+
+### 💰 Información Financiera
+
+```php
+// Obtener ganancias de socio
+$earnings = ConvoChat::sms()->getEarnings();
+
+// Obtener tarifas
+$rates = ConvoChat::sms()->getRates();
+
+// Obtener créditos
+$credits = ConvoChat::sms()->getCredits();
 ```
 
 ## 🔗 Enlaces Útiles

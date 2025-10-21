@@ -33,6 +33,12 @@ class ConvoChatWhatsAppService
     public const WHATSAPP_VALIDATE_ENDPOINT = '/validate/whatsapp';
     public const WHATSAPP_START_CAMPAIGN_ENDPOINT = '/remote/start.chats';
     public const WHATSAPP_STOP_CAMPAIGN_ENDPOINT = '/remote/stop.chats';
+    public const WHATSAPP_LINK_ENDPOINT = '/create/wa.link';
+    public const WHATSAPP_RELINK_ENDPOINT = '/create/wa.relink';
+    public const WHATSAPP_DELETE_RECEIVED_ENDPOINT = '/delete/wa.received';
+    public const WHATSAPP_DELETE_SENT_ENDPOINT = '/delete/wa.sent';
+    public const WHATSAPP_DELETE_ACCOUNT_ENDPOINT = '/delete/wa.account';
+    public const WHATSAPP_DELETE_CAMPAIGN_ENDPOINT = '/delete/wa.campaign';
     public const SUBSCRIPTION_ENDPOINT = '/get/subscription';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
@@ -305,6 +311,73 @@ class ConvoChatWhatsAppService
         ];
 
         return $this->makeRequest(self::SUBSCRIPTION_ENDPOINT, $data, 'GET');
+    }
+
+    public function linkWhatsAppAccount(?int $serverId = null): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+        ];
+
+        if ($serverId !== null) {
+            $data['sid'] = $serverId;
+        }
+
+        return $this->makeRequest(self::WHATSAPP_LINK_ENDPOINT, $data, 'GET');
+    }
+
+    public function relinkWhatsAppAccount(string $uniqueId, ?int $serverId = null): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'unique' => $uniqueId,
+        ];
+
+        if ($serverId !== null) {
+            $data['sid'] = $serverId;
+        }
+
+        return $this->makeRequest(self::WHATSAPP_RELINK_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteWhatsAppReceived(int $messageId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_DELETE_RECEIVED_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteWhatsAppSent(int $messageId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_DELETE_SENT_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteWhatsAppAccount(string $uniqueId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'unique' => $uniqueId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_DELETE_ACCOUNT_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteWhatsAppCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_DELETE_CAMPAIGN_ENDPOINT, $data, 'GET');
     }
 
     protected function validateConfiguration(): void

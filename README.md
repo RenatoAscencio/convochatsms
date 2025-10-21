@@ -22,6 +22,7 @@ Un paquete Laravel moderno y robusto para integración completa con ConvoChat AP
 - [WhatsApp Service](#whatsapp-service)
 - [Contacts Service](#contacts-service)
 - [OTP Service](#otp-service)
+- [USSD Service](#ussd-service)
 - [Ejemplos de Uso](#ejemplos-de-uso)
 - [Manejo de Errores](#manejo-de-errores)
 - [Logging](#logging)
@@ -55,12 +56,13 @@ El Service Provider se registra automáticamente en Laravel 5.5+.
 
 ## 🔧 Servicios Disponibles
 
-El SDK incluye 4 servicios principales:
+El SDK incluye 5 servicios principales:
 
 - **ConvoChatSmsService** - Gestión completa de SMS
 - **ConvoChatWhatsAppService** - Gestión completa de WhatsApp
 - **ConvoChatContactsService** - Gestión de contactos y grupos
 - **ConvoChatOtpService** - Envío y verificación de códigos OTP
+- **ConvoChatUssdService** - Gestión de códigos USSD
 
 ## 📱 SMS Service
 
@@ -652,6 +654,44 @@ Verifica un OTP enviado.
 **Ejemplo:**
 ```php
 $result = ConvoChat::otp()->verifyOtp('123456');
+```
+
+## 📡 USSD Service
+
+### Métodos Principales
+
+#### `sendUssd(string $code, int $sim, string $device)`
+Envía un código USSD.
+
+**Parámetros requeridos:**
+- `code` (string) - Código USSD a enviar (ej: "*123#")
+- `sim` (int) - Slot SIM (1 o 2)
+- `device` (string) - ID del dispositivo
+
+**Ejemplo:**
+```php
+$result = ConvoChat::ussd()->sendUssd('*123#', 1, 'device123');
+```
+
+#### `getUssdRequests(array $filters = [])`
+Obtiene las solicitudes USSD.
+
+**Parámetros opcionales:**
+- `limit` (int) - Límite de resultados
+- `page` (int) - Página actual
+- `status` (string) - Estado de la solicitud
+
+**Ejemplo:**
+```php
+$requests = ConvoChat::ussd()->getUssdRequests(['limit' => 10]);
+```
+
+#### `deleteUssdRequest(int $requestId)`
+Elimina una solicitud USSD.
+
+**Ejemplo:**
+```php
+$result = ConvoChat::ussd()->deleteUssdRequest(123);
 ```
 
 ## 📚 Ejemplos de Uso
