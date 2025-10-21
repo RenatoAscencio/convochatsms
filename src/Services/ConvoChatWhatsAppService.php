@@ -18,11 +18,17 @@ class ConvoChatWhatsAppService
     public const DOCUMENT_TYPE = 'document';
     public const DEFAULT_PRIORITY = 2;
     public const WHATSAPP_ENDPOINT = '/send/whatsapp';
-    public const WA_SERVERS_ENDPOINT = '/get/wa_servers';
-    public const WA_ACCOUNTS_ENDPOINT = '/get/wa_accounts';
-    public const WA_LINK_ENDPOINT = '/create/wa/link';
-    public const WA_RELINK_ENDPOINT = '/create/wa/relink';
-    public const WA_VALIDATE_ENDPOINT = '/get/wa/validate_number';
+    public const WHATSAPP_SEND_ENDPOINT = '/api/whatsapp/send';
+    public const WHATSAPP_MEDIA_ENDPOINT = '/api/whatsapp/media';
+    public const WHATSAPP_HISTORY_ENDPOINT = '/api/whatsapp/history';
+    public const WHATSAPP_DEVICES_ENDPOINT = '/api/whatsapp/devices';
+    public const WHATSAPP_CONNECT_ENDPOINT = '/api/whatsapp/connect';
+    public const WHATSAPP_DISCONNECT_ENDPOINT = '/api/whatsapp/disconnect/{id}';
+    public const WA_SERVERS_ENDPOINT = '/get/wa.servers';
+    public const WA_ACCOUNTS_ENDPOINT = '/get/wa.accounts';
+    public const WA_LINK_ENDPOINT = '/create/wa.link';
+    public const WA_RELINK_ENDPOINT = '/create/wa.relink';
+    public const WA_VALIDATE_ENDPOINT = '/get/wa.validate_number';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -129,17 +135,80 @@ class ConvoChatWhatsAppService
         ]);
     }
 
-    protected function makeRequest(string $endpoint, array $data): array
+    public function sendWhatsAppApi(array $params): array
+    {
+        $requiredParams = ['account', 'recipient', 'message'];
+        $this->validateRequiredParams($params, $requiredParams);
+
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $params);
+
+        return $this->makeRequest(self::WHATSAPP_SEND_ENDPOINT, $data);
+    }
+
+    public function sendWhatsAppMedia(array $params): array
+    {
+        $requiredParams = ['account', 'recipient', 'media_url', 'media_type'];
+        $this->validateRequiredParams($params, $requiredParams);
+
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $params);
+
+        return $this->makeRequest(self::WHATSAPP_MEDIA_ENDPOINT, $data);
+    }
+
+    public function getWhatsAppHistory(array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::WHATSAPP_HISTORY_ENDPOINT, $data);
+    }
+
+    public function getWhatsAppDevices(): array
+    {
+        return $this->makeRequest(self::WHATSAPP_DEVICES_ENDPOINT, [
+            'secret' => $this->apiKey,
+        ]);
+    }
+
+    public function connectWhatsAppDevice(array $deviceData): array
+    {
+        $requiredParams = ['name', 'type'];
+        $this->validateRequiredParams($deviceData, $requiredParams);
+
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $deviceData);
+
+        return $this->makeRequest(self::WHATSAPP_CONNECT_ENDPOINT, $data);
+    }
+
+    public function disconnectWhatsAppDevice(string $deviceId): array
+    {
+        $endpoint = str_replace('{id}', $deviceId, self::WHATSAPP_DISCONNECT_ENDPOINT);
+
+        return $this->makeRequest($endpoint, [
+            'secret' => $this->apiKey,
+        ], 'DELETE');
+    }
+
+    protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array
     {
         try {
-            $response = $this->client->post($this->baseUrl . $endpoint, [
+            $requestOptions = [
                 'json' => $data,
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
                 'timeout' => $this->timeout,
-            ]);
+            ];
+
+            $response = $this->client->request($method, $this->baseUrl . $endpoint, $requestOptions);
 
             $responseData = json_decode($response->getBody()->getContents(), true);
 

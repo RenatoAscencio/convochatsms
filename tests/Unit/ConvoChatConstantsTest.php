@@ -28,11 +28,11 @@ class ConvoChatConstantsTest extends TestCase
         $this->assertEquals('document', ConvoChatWhatsAppService::DOCUMENT_TYPE);
         $this->assertEquals(2, ConvoChatWhatsAppService::DEFAULT_PRIORITY);
         $this->assertEquals('/send/whatsapp', ConvoChatWhatsAppService::WHATSAPP_ENDPOINT);
-        $this->assertEquals('/get/wa_servers', ConvoChatWhatsAppService::WA_SERVERS_ENDPOINT);
-        $this->assertEquals('/get/wa_accounts', ConvoChatWhatsAppService::WA_ACCOUNTS_ENDPOINT);
-        $this->assertEquals('/create/wa/link', ConvoChatWhatsAppService::WA_LINK_ENDPOINT);
-        $this->assertEquals('/create/wa/relink', ConvoChatWhatsAppService::WA_RELINK_ENDPOINT);
-        $this->assertEquals('/get/wa/validate_number', ConvoChatWhatsAppService::WA_VALIDATE_ENDPOINT);
+        $this->assertEquals('/get/wa.servers', ConvoChatWhatsAppService::WA_SERVERS_ENDPOINT);
+        $this->assertEquals('/get/wa.accounts', ConvoChatWhatsAppService::WA_ACCOUNTS_ENDPOINT);
+        $this->assertEquals('/create/wa.link', ConvoChatWhatsAppService::WA_LINK_ENDPOINT);
+        $this->assertEquals('/create/wa.relink', ConvoChatWhatsAppService::WA_RELINK_ENDPOINT);
+        $this->assertEquals('/get/wa.validate_number', ConvoChatWhatsAppService::WA_VALIDATE_ENDPOINT);
         $this->assertEquals('https://sms.convo.chat/api', ConvoChatWhatsAppService::DEFAULT_BASE_URL);
         $this->assertEquals(30, ConvoChatWhatsAppService::DEFAULT_TIMEOUT);
     }

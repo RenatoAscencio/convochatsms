@@ -6,25 +6,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-class ConvoChatSmsService
+class ConvoChatContactsService
 {
     protected Client $client;
     protected string $apiKey;
     protected string $baseUrl;
     protected int $timeout;
 
-    public const DEFAULT_MODE = 'devices';
-    public const CREDITS_MODE = 'credits';
-    public const SMS_ENDPOINT = '/send/sms';
-    public const SMS_SEND_ENDPOINT = '/api/sms/send';
-    public const SMS_BULK_ENDPOINT = '/api/sms/bulk';
-    public const SMS_HISTORY_ENDPOINT = '/api/sms/history';
-    public const SMS_DETAIL_ENDPOINT = '/api/sms/{id}';
-    public const SMS_DELETE_ENDPOINT = '/api/sms/{id}';
-    public const DEVICES_ENDPOINT = '/get/devices';
-    public const CREDITS_ENDPOINT = '/get/credits';
-    public const GATEWAY_RATES_ENDPOINT = '/get/gateway/rates';
-    public const SUBSCRIPTION_ENDPOINT = '/get/subscription/package';
+    public const CONTACTS_ENDPOINT = '/api/contacts';
+    public const CONTACT_DETAIL_ENDPOINT = '/api/contacts/{id}';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -40,118 +30,50 @@ class ConvoChatSmsService
         $this->validateConfiguration();
     }
 
-    public function sendSms(array $params): array
-    {
-        $requiredParams = ['phone', 'message'];
-        $this->validateRequiredParams($params, $requiredParams);
-
-        $data = array_merge([
-            'secret' => $this->apiKey,
-            'mode' => $params['mode'] ?? self::DEFAULT_MODE,
-        ], $params);
-
-        return $this->makeRequest(self::SMS_ENDPOINT, $data);
-    }
-
-    public function sendSmsWithDevice(string $phone, string $message, string $deviceId, array $options = []): array
-    {
-        $params = array_merge([
-            'phone' => $phone,
-            'message' => $message,
-            'device' => $deviceId,
-            'mode' => self::DEFAULT_MODE,
-        ], $options);
-
-        return $this->sendSms($params);
-    }
-
-    public function sendSmsWithCredits(string $phone, string $message, ?string $gatewayId = null, array $options = []): array
-    {
-        $params = array_merge([
-            'phone' => $phone,
-            'message' => $message,
-            'mode' => self::CREDITS_MODE,
-        ], $options);
-
-        if ($gatewayId) {
-            $params['gateway'] = $gatewayId;
-        }
-
-        return $this->sendSms($params);
-    }
-
-    public function getDevices(): array
-    {
-        return $this->makeRequest(self::DEVICES_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function getCredits(): array
-    {
-        return $this->makeRequest(self::CREDITS_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function getGatewayRates(): array
-    {
-        return $this->makeRequest(self::GATEWAY_RATES_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function getSubscription(): array
-    {
-        return $this->makeRequest(self::SUBSCRIPTION_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function sendSmsApi(array $params): array
-    {
-        $requiredParams = ['phone', 'message'];
-        $this->validateRequiredParams($params, $requiredParams);
-
-        $data = array_merge([
-            'secret' => $this->apiKey,
-        ], $params);
-
-        return $this->makeRequest(self::SMS_SEND_ENDPOINT, $data);
-    }
-
-    public function sendBulkSms(array $recipients, string $message, array $options = []): array
-    {
-        $data = array_merge([
-            'secret' => $this->apiKey,
-            'recipients' => $recipients,
-            'message' => $message,
-        ], $options);
-
-        return $this->makeRequest(self::SMS_BULK_ENDPOINT, $data);
-    }
-
-    public function getSmsHistory(array $filters = []): array
+    public function getContacts(array $filters = []): array
     {
         $data = array_merge([
             'secret' => $this->apiKey,
         ], $filters);
 
-        return $this->makeRequest(self::SMS_HISTORY_ENDPOINT, $data);
+        return $this->makeRequest(self::CONTACTS_ENDPOINT, $data, 'GET');
     }
 
-    public function getSmsDetail(string $smsId): array
+    public function createContact(array $contactData): array
     {
-        $endpoint = str_replace('{id}', $smsId, self::SMS_DETAIL_ENDPOINT);
+        $requiredParams = ['name', 'phone'];
+        $this->validateRequiredParams($contactData, $requiredParams);
+
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $contactData);
+
+        return $this->makeRequest(self::CONTACTS_ENDPOINT, $data);
+    }
+
+    public function getContact(string $contactId): array
+    {
+        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
 
         return $this->makeRequest($endpoint, [
             'secret' => $this->apiKey,
-        ]);
+        ], 'GET');
     }
 
-    public function deleteSms(string $smsId): array
+    public function updateContact(string $contactId, array $contactData): array
     {
-        $endpoint = str_replace('{id}', $smsId, self::SMS_DELETE_ENDPOINT);
+        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
+
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $contactData);
+
+        return $this->makeRequest($endpoint, $data, 'PUT');
+    }
+
+    public function deleteContact(string $contactId): array
+    {
+        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
 
         return $this->makeRequest($endpoint, [
             'secret' => $this->apiKey,
@@ -179,8 +101,9 @@ class ConvoChatSmsService
             }
 
             if (config('convochat.log_requests', false)) {
-                Log::info('ConvoChat SMS API Request Success', [
+                Log::info('ConvoChat Contacts API Request Success', [
                     'endpoint' => $endpoint,
+                    'method' => $method,
                     'response_status' => $responseData['status'] ?? 'unknown',
                     'request_time' => now(),
                     'base_url' => $this->baseUrl,
@@ -191,8 +114,9 @@ class ConvoChatSmsService
             return $responseData;
 
         } catch (GuzzleException $e) {
-            Log::error('ConvoChat SMS API Error', [
+            Log::error('ConvoChat Contacts API Error', [
                 'endpoint' => $endpoint,
+                'method' => $method,
                 'error_message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
                 'request_data' => array_merge($data, ['secret' => '[REDACTED]']),
@@ -201,7 +125,7 @@ class ConvoChatSmsService
                 'request_time' => now(),
             ]);
 
-            throw new \Exception("ConvoChat SMS API Error: " . $e->getMessage());
+            throw new \Exception("ConvoChat Contacts API Error: " . $e->getMessage());
         }
     }
 
