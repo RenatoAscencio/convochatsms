@@ -4,65 +4,65 @@
 
 ### 📱 SMS Endpoints
 
-| Endpoint | Método | Descripción | Parámetros Requeridos |
-|----------|--------|-------------|----------------------|
-| `/send/sms` | POST | Enviar SMS individual | `phone`, `message`, `mode` |
-| `/send/sms.bulk` | POST | Envío masivo de SMS | `recipients`, `message` |
-| `/get/sms.pending` | GET | Mensajes pendientes | - |
-| `/get/sms.received` | GET | Mensajes recibidos | - |
-| `/get/sms.sent` | GET | Mensajes enviados | - |
-| `/get/sms.message` | GET | Mensaje específico | `id`, `type` |
-| `/get/sms.campaigns` | GET | Campañas SMS | - |
-| `/delete/sms.received` | GET | Eliminar recibido | `id` |
-| `/delete/sms.sent` | GET | Eliminar enviado | `id` |
-| `/delete/sms.campaign` | GET | Eliminar campaña | `id` |
-| `/remote/start.sms` | GET | Iniciar campaña | `campaign` |
-| `/remote/stop.sms` | GET | Detener campaña | `campaign` |
-| `/get/devices` | GET | Dispositivos disponibles | `limit`, `page` |
-| `/get/credits` | GET | Créditos restantes | - |
-| `/get/rates` | GET | Tarifas de gateways | - |
-| `/get/subscription` | GET | Paquete de suscripción | - |
+| Endpoint               | Método | Descripción              | Parámetros Requeridos      |
+| ---------------------- | ------ | ------------------------ | -------------------------- |
+| `/send/sms`            | POST   | Enviar SMS individual    | `phone`, `message`, `mode` |
+| `/send/sms.bulk`       | POST   | Envío masivo de SMS      | `recipients`, `message`    |
+| `/get/sms.pending`     | GET    | Mensajes pendientes      | -                          |
+| `/get/sms.received`    | GET    | Mensajes recibidos       | -                          |
+| `/get/sms.sent`        | GET    | Mensajes enviados        | -                          |
+| `/get/sms.message`     | GET    | Mensaje específico       | `id`, `type`               |
+| `/get/sms.campaigns`   | GET    | Campañas SMS             | -                          |
+| `/delete/sms.received` | GET    | Eliminar recibido        | `id`                       |
+| `/delete/sms.sent`     | GET    | Eliminar enviado         | `id`                       |
+| `/delete/sms.campaign` | GET    | Eliminar campaña         | `id`                       |
+| `/remote/start.sms`    | GET    | Iniciar campaña          | `campaign`                 |
+| `/remote/stop.sms`     | GET    | Detener campaña          | `campaign`                 |
+| `/get/devices`         | GET    | Dispositivos disponibles | `limit`, `page`            |
+| `/get/credits`         | GET    | Créditos restantes       | -                          |
+| `/get/rates`           | GET    | Tarifas de gateways      | -                          |
+| `/get/subscription`    | GET    | Paquete de suscripción   | -                          |
 
 ### 💬 WhatsApp Endpoints
 
-| Endpoint | Método | Descripción | Parámetros Requeridos |
-|----------|--------|-------------|----------------------|
-| `/send/whatsapp` | POST | Enviar WhatsApp individual | `account`, `recipient`, `type`, `message` |
-| `/send/whatsapp.bulk` | POST | Envío masivo WhatsApp | `recipients`, `message` |
-| `/get/wa.pending` | GET | Mensajes pendientes | - |
-| `/get/wa.received` | GET | Mensajes recibidos | - |
-| `/get/wa.sent` | GET | Mensajes enviados | - |
-| `/get/wa.message` | GET | Mensaje específico | `id`, `type` |
-| `/get/wa.campaigns` | GET | Campañas WhatsApp | - |
-| `/get/wa.groups` | GET | Grupos WhatsApp | - |
-| `/get/wa.group.contacts` | GET | Contactos de grupo | `group` |
-| `/get/wa.qr` | GET | Código QR | `unique` |
-| `/get/wa.servers` | GET | Servidores WhatsApp | - |
-| `/get/wa.accounts` | GET | Cuentas WhatsApp | - |
-| `/get/wa.info` | GET | Información de cuenta | `unique` |
-| `/validate/whatsapp` | GET | Validar número | `unique`, `phone` |
-| `/remote/start.chats` | GET | Iniciar campaña | `campaign` |
-| `/remote/stop.chats` | GET | Detener campaña | `campaign` |
+| Endpoint                 | Método | Descripción                | Parámetros Requeridos                     |
+| ------------------------ | ------ | -------------------------- | ----------------------------------------- |
+| `/send/whatsapp`         | POST   | Enviar WhatsApp individual | `account`, `recipient`, `type`, `message` |
+| `/send/whatsapp.bulk`    | POST   | Envío masivo WhatsApp      | `recipients`, `message`                   |
+| `/get/wa.pending`        | GET    | Mensajes pendientes        | -                                         |
+| `/get/wa.received`       | GET    | Mensajes recibidos         | -                                         |
+| `/get/wa.sent`           | GET    | Mensajes enviados          | -                                         |
+| `/get/wa.message`        | GET    | Mensaje específico         | `id`, `type`                              |
+| `/get/wa.campaigns`      | GET    | Campañas WhatsApp          | -                                         |
+| `/get/wa.groups`         | GET    | Grupos WhatsApp            | -                                         |
+| `/get/wa.group.contacts` | GET    | Contactos de grupo         | `group`                                   |
+| `/get/wa.qr`             | GET    | Código QR                  | `unique`                                  |
+| `/get/wa.servers`        | GET    | Servidores WhatsApp        | -                                         |
+| `/get/wa.accounts`       | GET    | Cuentas WhatsApp           | -                                         |
+| `/get/wa.info`           | GET    | Información de cuenta      | `unique`                                  |
+| `/validate/whatsapp`     | GET    | Validar número             | `unique`, `phone`                         |
+| `/remote/start.chats`    | GET    | Iniciar campaña            | `campaign`                                |
+| `/remote/stop.chats`     | GET    | Detener campaña            | `campaign`                                |
 
 ### 👥 Contacts Endpoints
 
-| Endpoint | Método | Descripción | Parámetros Requeridos |
-|----------|--------|-------------|----------------------|
-| `/get/contacts` | GET | Listar contactos | - |
-| `/create/contact` | POST | Crear contacto | `phone`, `name`, `groups` |
-| `/delete/contact` | GET | Eliminar contacto | `id` |
-| `/get/groups` | GET | Listar grupos | - |
-| `/create/group` | POST | Crear grupo | `name` |
-| `/delete/group` | GET | Eliminar grupo | `id` |
-| `/get/unsubscribed` | GET | Contactos dados de baja | - |
-| `/delete/unsubscribed` | GET | Eliminar dado de baja | `id` |
+| Endpoint               | Método | Descripción             | Parámetros Requeridos     |
+| ---------------------- | ------ | ----------------------- | ------------------------- |
+| `/get/contacts`        | GET    | Listar contactos        | -                         |
+| `/create/contact`      | POST   | Crear contacto          | `phone`, `name`, `groups` |
+| `/delete/contact`      | GET    | Eliminar contacto       | `id`                      |
+| `/get/groups`          | GET    | Listar grupos           | -                         |
+| `/create/group`        | POST   | Crear grupo             | `name`                    |
+| `/delete/group`        | GET    | Eliminar grupo          | `id`                      |
+| `/get/unsubscribed`    | GET    | Contactos dados de baja | -                         |
+| `/delete/unsubscribed` | GET    | Eliminar dado de baja   | `id`                      |
 
 ### 🔐 OTP Endpoints
 
-| Endpoint | Método | Descripción | Parámetros Requeridos |
-|----------|--------|-------------|----------------------|
-| `/send/otp` | POST | Enviar código OTP | `type`, `message`, `phone` |
-| `/get/otp` | GET | Verificar código OTP | `otp` |
+| Endpoint    | Método | Descripción          | Parámetros Requeridos      |
+| ----------- | ------ | -------------------- | -------------------------- |
+| `/send/otp` | POST   | Enviar código OTP    | `type`, `message`, `phone` |
+| `/get/otp`  | GET    | Verificar código OTP | `otp`                      |
 
 ## 🔧 Ejemplos Detallados por Endpoint
 
@@ -350,13 +350,13 @@ class SmsWorkflow
             if ($credits['data']['credits'] < 1) {
                 throw new \Exception('Créditos insuficientes');
             }
-            
+
             // 2. Obtener dispositivos disponibles
             $devices = ConvoChat::sms()->getDevices();
             if (empty($devices['data'])) {
                 throw new \Exception('No hay dispositivos disponibles');
             }
-            
+
             // 3. Enviar SMS
             $result = ConvoChat::sms()->sendSms([
                 'phone' => $phone,
@@ -365,7 +365,7 @@ class SmsWorkflow
                 'device' => $devices['data'][0]['id'],
                 'priority' => 1
             ]);
-            
+
             // 4. Verificar envío
             if ($result['status'] == 200) {
                 return [
@@ -373,7 +373,7 @@ class SmsWorkflow
                     'message_id' => $result['data']['messageId']
                 ];
             }
-            
+
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -397,7 +397,7 @@ class ContactWorkflow
                 'name' => 'Importación ' . date('Y-m-d H:i:s')
             ]);
             $groupId = $group['data']['id'];
-            
+
             // 2. Importar contactos
             $imported = [];
             foreach ($contactsData as $contact) {
@@ -408,17 +408,17 @@ class ContactWorkflow
                 ]);
                 $imported[] = $result;
             }
-            
+
             // 3. Verificar importación
             $groupContacts = ConvoChat::contacts()->getContacts(['limit' => 1000]);
-            
+
             return [
                 'success' => true,
                 'group_id' => $groupId,
                 'imported_count' => count($imported),
                 'total_contacts' => count($groupContacts['data'])
             ];
-            
+
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -447,17 +447,17 @@ class OtpWorkflow
                 'mode' => 'credits',
                 'gateway' => 'gateway456'
             ]);
-            
+
             // 2. Guardar en caché para verificación
             $otpCode = $result['data']['otp'];
             cache()->put("otp_{$phone}", $otpCode, 300); // 5 minutos
-            
+
             return [
                 'success' => true,
                 'expires_in' => 300,
                 'message' => 'Código enviado exitosamente'
             ];
-            
+
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -465,20 +465,20 @@ class OtpWorkflow
             ];
         }
     }
-    
+
     public function verifyCodeWorkflow($phone, $otp)
     {
         try {
             // 1. Verificar OTP
             $result = ConvoChat::otp()->verifyOtp($otp);
-            
+
             // 2. Verificar en caché
             $cachedOtp = cache()->get("otp_{$phone}");
-            
+
             if ($result['status'] == 200 && $cachedOtp == $otp) {
                 // 3. Limpiar caché
                 cache()->forget("otp_{$phone}");
-                
+
                 return [
                     'success' => true,
                     'message' => 'Código verificado exitosamente'
@@ -489,7 +489,7 @@ class OtpWorkflow
                     'message' => 'Código inválido o expirado'
                 ];
             }
-            
+
         } catch (\Exception $e) {
             return [
                 'success' => false,
@@ -550,7 +550,7 @@ class OtpWorkflow
             "status": "connected"
         },
         {
-            "unique": "acc2", 
+            "unique": "acc2",
             "phone": "+573002222222",
             "status": "disconnected"
         }
@@ -574,14 +574,14 @@ class OtpWorkflow
 
 ## 🚨 Códigos de Error Comunes
 
-| Código | Descripción | Solución |
-|--------|-------------|----------|
-| 400 | Parámetros inválidos | Verificar parámetros requeridos |
-| 401 | API key inválida | Verificar CONVOCHAT_API_KEY |
-| 403 | Permisos insuficientes | Contactar soporte para permisos |
-| 404 | Recurso no encontrado | Verificar IDs de recursos |
-| 429 | Límite de velocidad | Reducir frecuencia de peticiones |
-| 500 | Error interno | Contactar soporte técnico |
+| Código | Descripción            | Solución                         |
+| ------ | ---------------------- | -------------------------------- |
+| 400    | Parámetros inválidos   | Verificar parámetros requeridos  |
+| 401    | API key inválida       | Verificar CONVOCHAT_API_KEY      |
+| 403    | Permisos insuficientes | Contactar soporte para permisos  |
+| 404    | Recurso no encontrado  | Verificar IDs de recursos        |
+| 429    | Límite de velocidad    | Reducir frecuencia de peticiones |
+| 500    | Error interno          | Contactar soporte técnico        |
 
 ## 🔧 Configuración de Desarrollo
 
@@ -635,24 +635,244 @@ class SmsServiceTest extends TestCase
                 'data' => ['messageId' => 123]
             ])),
         ]);
-        
+
         $handlerStack = HandlerStack::create($mock);
         $client = new Client(['handler' => $handlerStack]);
-        
+
         $smsService = new ConvoChatSmsService($client, [
             'api_key' => 'test_key',
             'base_url' => 'https://sms.convo.chat/api',
             'timeout' => 30
         ]);
-        
+
         $result = $smsService->sendSms([
             'phone' => '+522221234567',
             'message' => 'Test message',
             'mode' => 'devices'
         ]);
-        
+
         $this->assertEquals(200, $result['status']);
         $this->assertEquals(123, $result['data']['messageId']);
     }
 }
+```
+
+## 🌐 Ejemplos Multi-Lenguaje
+
+### 📱 Get Devices - Ejemplos en Diferentes Lenguajes
+
+#### cURL
+```bash
+curl -X GET "https://sms.convo.chat/api/get/devices?secret=YOUR_API_SECRET&limit=10&page=1" \
+     -H "Content-Type: application/json"
+```
+
+#### Python
+```python
+import requests
+
+# Define the endpoint and parameters
+url = "https://sms.convo.chat/api/get/devices"
+params = {
+    "secret": "YOUR_API_SECRET",
+    "limit": 10,
+    "page": 1
+}
+
+# Make the GET request
+response = requests.get(url, params=params)
+
+# Handle the response
+if response.status_code == 200:
+    print("Success:", response.json())
+else:
+    print("Error:", response.status_code, response.json())
+```
+
+#### Node.js
+```javascript
+const axios = require('axios');
+
+// Define the API details
+const url = "https://sms.convo.chat/api/get/devices";
+const params = {
+    secret: "YOUR_API_SECRET",
+    limit: 10,
+    page: 1
+};
+
+// Make the GET request
+axios.get(url, { params })
+    .then(response => {
+        console.log("Success:", response.data);
+    })
+    .catch(error => {
+        if (error.response) {
+            console.error("Error:", error.response.status, error.response.data);
+        } else {
+            console.error("Error:", error.message);
+        }
+    });
+```
+
+#### PHP (Sin SDK)
+```php
+<?php
+
+// Define the API endpoint and parameters
+$url = "https://sms.convo.chat/api/get/devices?secret=YOUR_API_SECRET&limit=10&page=1";
+
+// Initialize cURL session
+$ch = curl_init();
+
+// Set cURL options
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+// Execute the request
+$response = curl_exec($ch);
+$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+// Handle the response
+if ($http_code === 200) {
+    echo "Success: " . $response;
+} else {
+    echo "Error: HTTP Code " . $http_code . ", Response: " . $response;
+}
+
+// Close cURL session
+curl_close($ch);
+```
+
+### 📱 Send SMS - Ejemplos Multi-Lenguaje
+
+#### cURL
+```bash
+curl -X POST "https://sms.convo.chat/api/send/sms" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "secret": "YOUR_API_SECRET",
+       "phone": "+522221234567",
+       "message": "Hello from ConvoChat!",
+       "mode": "devices",
+       "device": "device123",
+       "sim": 1,
+       "priority": 1
+     }'
+```
+
+#### Python
+```python
+import requests
+
+url = "https://sms.convo.chat/api/send/sms"
+data = {
+    "secret": "YOUR_API_SECRET",
+    "phone": "+522221234567",
+    "message": "Hello from ConvoChat!",
+    "mode": "devices",
+    "device": "device123",
+    "sim": 1,
+    "priority": 1
+}
+
+response = requests.post(url, json=data)
+
+if response.status_code == 200:
+    print("Success:", response.json())
+else:
+    print("Error:", response.status_code, response.json())
+```
+
+#### Node.js
+```javascript
+const axios = require('axios');
+
+const url = "https://sms.convo.chat/api/send/sms";
+const data = {
+    secret: "YOUR_API_SECRET",
+    phone: "+522221234567",
+    message: "Hello from ConvoChat!",
+    mode: "devices",
+    device: "device123",
+    sim: 1,
+    priority: 1
+};
+
+axios.post(url, data)
+    .then(response => {
+        console.log("Success:", response.data);
+    })
+    .catch(error => {
+        console.error("Error:", error.response?.status, error.response?.data);
+    });
+```
+
+### 💬 Send WhatsApp - Ejemplos Multi-Lenguaje
+
+#### cURL
+```bash
+curl -X POST "https://sms.convo.chat/api/send/whatsapp" \
+     -H "Content-Type: application/json" \
+     -d '{
+       "secret": "YOUR_API_SECRET",
+       "account": "account123",
+       "recipient": "+522221234567",
+       "type": "text",
+       "message": "Hello from WhatsApp!",
+       "priority": 2
+     }'
+```
+
+#### Python
+```python
+import requests
+
+url = "https://sms.convo.chat/api/send/whatsapp"
+data = {
+    "secret": "YOUR_API_SECRET",
+    "account": "account123",
+    "recipient": "+522221234567",
+    "type": "text",
+    "message": "Hello from WhatsApp!",
+    "priority": 2
+}
+
+response = requests.post(url, json=data)
+
+if response.status_code == 200:
+    print("Success:", response.json())
+else:
+    print("Error:", response.status_code, response.json())
+```
+
+#### Node.js
+```javascript
+const axios = require('axios');
+
+const url = "https://sms.convo.chat/api/send/whatsapp";
+const data = {
+    secret: "YOUR_API_SECRET",
+    account: "account123",
+    recipient: "+522221234567",
+    type: "text",
+    message: "Hello from WhatsApp!",
+    priority: 2
+};
+
+axios.post(url, data)
+    .then(response => {
+        console.log("Success:", response.data);
+    })
+    .catch(error => {
+        console.error("Error:", error.response?.status, error.response?.data);
+    });
+```
+
+## 🔗 Enlaces Útiles
+
+- **Documentación Oficial**: https://docs.convo.chat
+- **Dashboard**: https://sms.convo.chat
+- **API Keys**: https://sms.convo.chat/dashboard/tools/keys
+- **Soporte**: support@convo.chat
 ```
