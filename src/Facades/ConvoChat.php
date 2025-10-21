@@ -2,10 +2,10 @@
 
 namespace ConvoChat\LaravelSmsGateway\Facades;
 
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
-use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatContactsService;
 use ConvoChat\LaravelSmsGateway\Services\ConvoChatOtpService;
+use ConvoChat\LaravelSmsGateway\Services\ConvoChatSmsService;
+use ConvoChat\LaravelSmsGateway\Services\ConvoChatWhatsAppService;
 use Illuminate\Support\Facades\Facade;
 
 /**
