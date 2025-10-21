@@ -33,6 +33,7 @@ class ConvoChatWhatsAppService
     public const WHATSAPP_VALIDATE_ENDPOINT = '/validate/whatsapp';
     public const WHATSAPP_START_CAMPAIGN_ENDPOINT = '/remote/start.chats';
     public const WHATSAPP_STOP_CAMPAIGN_ENDPOINT = '/remote/stop.chats';
+    public const SUBSCRIPTION_ENDPOINT = '/get/subscription';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -295,6 +296,15 @@ class ConvoChatWhatsAppService
                 throw new \InvalidArgumentException("Missing required parameter: {$param}");
             }
         }
+    }
+
+    public function getWhatsAppSubscription(): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+        ];
+
+        return $this->makeRequest(self::SUBSCRIPTION_ENDPOINT, $data, 'GET');
     }
 
     protected function validateConfiguration(): void

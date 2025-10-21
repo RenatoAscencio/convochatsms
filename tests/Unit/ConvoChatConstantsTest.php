@@ -31,6 +31,7 @@ class ConvoChatConstantsTest extends TestCase
         $this->assertEquals('/get/wa.servers', ConvoChatWhatsAppService::WHATSAPP_SERVERS_ENDPOINT);
         $this->assertEquals('/get/wa.accounts', ConvoChatWhatsAppService::WHATSAPP_ACCOUNTS_ENDPOINT);
         $this->assertEquals('/validate/whatsapp', ConvoChatWhatsAppService::WHATSAPP_VALIDATE_ENDPOINT);
+        $this->assertEquals('/get/subscription', ConvoChatWhatsAppService::SUBSCRIPTION_ENDPOINT);
         $this->assertEquals('https://sms.convo.chat/api', ConvoChatWhatsAppService::DEFAULT_BASE_URL);
         $this->assertEquals(30, ConvoChatWhatsAppService::DEFAULT_TIMEOUT);
     }
