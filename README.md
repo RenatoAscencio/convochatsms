@@ -1,4 +1,17 @@
-# ConvoChat SDK - Documentación Completa
+# ConvoChat Laravel SMS Gateway
+
+[![Latest Version](https://img.shields.io/packagist/v/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
+[![Total Downloads](https://img.shields.io/packagist/dt/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
+[![License](https://img.shields.io/packagist/l/convochatsms/laravel-sms-whatsapp-gateway.svg?style=flat-square)](https://packagist.org/packages/convochatsms/laravel-sms-whatsapp-gateway)
+[![Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
+[![Coverage](https://codecov.io/gh/RenatoAscencio/convochatsms/branch/main/graph/badge.svg)](https://codecov.io/gh/RenatoAscencio/convochatsms)
+[![PHPStan Level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen.svg?style=flat-square)](https://phpstan.org/)
+[![PHP Versions](https://img.shields.io/badge/PHP-8.1%20%7C%208.2%20%7C%208.3%20%7C%208.4-blue.svg?style=flat-square)](https://php.net/)
+[![Laravel Versions](https://img.shields.io/badge/Laravel-9%20%7C%2010%20%7C%2011%20%7C%2012-red.svg?style=flat-square)](https://laravel.com/)
+
+Un paquete Laravel moderno y robusto para integración completa con ConvoChat API para envío de SMS y WhatsApp con soporte para múltiples modos, configuración avanzada y monitoreo.
+
+[![Status de Tests](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml/badge.svg)](https://github.com/RenatoAscencio/convochatsms/actions/workflows/tests.yml)
 
 ## 📋 Tabla de Contenidos
 
