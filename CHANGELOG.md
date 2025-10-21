@@ -19,6 +19,67 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.3.0] - 2024-12-19
+
+### Added
+
+- **WhatsApp Account Management**
+  - `linkWhatsAppAccount()` - Connect new WhatsApp accounts
+  - `relinkWhatsAppAccount()` - Reconnect existing accounts
+  - `deleteWhatsAppAccount()` - Remove WhatsApp accounts
+  - `getWhatsAppSubscription()` - Get subscription details
+
+- **Data Management Operations**
+  - `deleteSmsReceived()` - Delete received SMS messages
+  - `deleteSmsSent()` - Delete sent SMS messages
+  - `deleteSmsCampaign()` - Delete SMS campaigns
+  - `deleteWhatsAppReceived()` - Delete received WhatsApp messages
+  - `deleteWhatsAppSent()` - Delete sent WhatsApp messages
+  - `deleteWhatsAppCampaign()` - Delete WhatsApp campaigns
+  - `deleteNotification()` - Delete Android notifications
+
+- **USSD Service (NEW!)**
+  - Complete `ConvoChatUssdService` class
+  - `sendUssd()` - Execute USSD commands
+  - `getUssdRequests()` - Get USSD request history
+  - `deleteUssdRequest()` - Delete USSD requests
+
+- **Financial Features**
+  - `getEarnings()` - Get partner earnings information
+
+- **Enhanced Documentation**
+  - Complete API reference in ENDPOINTS.md
+  - Usage examples for all new endpoints
+  - Multi-language examples (cURL, Python, Node.js, PHP)
+  - Updated README.md with USSD service documentation
+
+### Changed
+
+- Updated ServiceProvider to include USSD service
+- Enhanced Facade with all new method signatures
+- Updated test suite with new constants and methods
+- Improved code structure and organization
+
+### Fixed
+
+- Fixed duplicate method declarations in SMS service
+- Resolved linting issues (unused parameters, duplicate literals)
+- Corrected code style violations
+
+### Technical Details
+
+- **New Service**: `ConvoChatUssdService` for USSD operations
+- **New Constants**: Added constants for all new endpoints
+- **New Methods**: 15+ new methods across services
+- **Test Coverage**: Updated tests for all new functionality
+- **Documentation**: Comprehensive updates to all documentation files
+
+### Impact
+
+This release provides **100% coverage** of all available ConvoChat API endpoints, transforming the SDK from a basic SMS/WhatsApp tool into a complete ConvoChat API integration solution.
+
+---
+
 ## [3.2.1] - 2025-01-15
 
 ### 🚀 Added
