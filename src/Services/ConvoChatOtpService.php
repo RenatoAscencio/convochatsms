@@ -6,15 +6,15 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 
-class ConvoChatSettingsService
+class ConvoChatOtpService
 {
     protected Client $client;
     protected string $apiKey;
     protected string $baseUrl;
     protected int $timeout;
 
-    public const SETTINGS_ENDPOINT = '/api/settings';
-    public const BALANCE_ENDPOINT = '/api/balance';
+    public const SEND_OTP_ENDPOINT = '/send/otp';
+    public const VERIFY_OTP_ENDPOINT = '/get/otp';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -30,27 +30,26 @@ class ConvoChatSettingsService
         $this->validateConfiguration();
     }
 
-    public function getSettings(): array
+    public function sendOtp(array $params): array
     {
-        return $this->makeRequest(self::SETTINGS_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ], 'GET');
-    }
+        $requiredParams = ['type', 'message', 'phone'];
+        $this->validateRequiredParams($params, $requiredParams);
 
-    public function updateSettings(array $settingsData): array
-    {
         $data = array_merge([
             'secret' => $this->apiKey,
-        ], $settingsData);
+        ], $params);
 
-        return $this->makeRequest(self::SETTINGS_ENDPOINT, $data, 'PUT');
+        return $this->makeRequest(self::SEND_OTP_ENDPOINT, $data);
     }
 
-    public function getBalance(): array
+    public function verifyOtp(string $otp): array
     {
-        return $this->makeRequest(self::BALANCE_ENDPOINT, [
+        $data = [
             'secret' => $this->apiKey,
-        ], 'GET');
+            'otp' => $otp,
+        ];
+
+        return $this->makeRequest(self::VERIFY_OTP_ENDPOINT, $data, 'GET');
     }
 
     protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array
@@ -74,9 +73,8 @@ class ConvoChatSettingsService
             }
 
             if (config('convochat.log_requests', false)) {
-                Log::info('ConvoChat Settings API Request Success', [
+                Log::info('ConvoChat OTP API Request Success', [
                     'endpoint' => $endpoint,
-                    'method' => $method,
                     'response_status' => $responseData['status'] ?? 'unknown',
                     'request_time' => now(),
                     'base_url' => $this->baseUrl,
@@ -87,18 +85,26 @@ class ConvoChatSettingsService
             return $responseData;
 
         } catch (GuzzleException $e) {
-            Log::error('ConvoChat Settings API Error', [
+            Log::error('ConvoChat OTP API Error', [
                 'endpoint' => $endpoint,
-                'method' => $method,
                 'error_message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
-                'request_data' => array_merge($data, ['secret' => '[REDACTED]']),
+                'request_data' => array_merge($data, ['secret' => '[REDACTED]', 'otp' => '[REDACTED]']),
                 'base_url' => $this->baseUrl,
                 'timeout' => $this->timeout,
                 'request_time' => now(),
             ]);
 
-            throw new \Exception("ConvoChat Settings API Error: " . $e->getMessage());
+            throw new \Exception("ConvoChat OTP API Error: " . $e->getMessage());
+        }
+    }
+
+    protected function validateRequiredParams(array $params, array $required): void
+    {
+        foreach ($required as $param) {
+            if (! isset($params[$param]) || empty($params[$param])) {
+                throw new \InvalidArgumentException("Missing required parameter: {$param}");
+            }
         }
     }
 

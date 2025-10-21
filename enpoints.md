@@ -1,0 +1,1395 @@
+=============================
+ACCOUNT
+=============================
+
+GET /get/credits
+Descripción: Obtener créditos restantes.
+Permiso requerido: get_credits
+Parámetros:
+
+- secret (string, requerido): La clave API (desde Tools -> API Keys)
+
+Ejemplo de petición:
+curl -X GET "<https://sms.convo.chat/api/get/credits?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Remaining Credits",
+  "data": {
+    "credits": "798.634",
+    "currency": "GBP"
+  }
+}
+
+GET /get/subscription
+Descripción: Obtener el paquete de suscripción actual.
+Permiso requerido: get_subscription
+Parámetros:
+
+- secret (string, requerido): La clave API (desde Tools -> API Keys)
+
+Ejemplo de petición:
+curl -X GET "<https://sms.convo.chat/api/get/subscription?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Subscription Package",
+  "data": {
+    "name": "Starter",
+    "usage": {...}
+  }
+}
+
+=============================
+PARTNERS
+=============================
+
+GET /get/earnings
+Descripción: Obtener ganancias de socio (Partner Earnings).
+Permiso requerido: get_earnings
+Parámetros:
+
+- secret (string, requerido): La clave API (desde Tools -> API Keys)
+
+Ejemplo de petición:
+curl -X GET "<https://sms.convo.chat/api/get/earnings?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Partner Credits",
+  "data": {
+    "earnings": "1.43638",
+    "currency": "GBP"
+  }
+}
+
+=============================
+CONTACTS
+=============================
+
+POST /create/contact
+Descripción: Crear nuevo contacto.
+Permiso requerido: create_contact
+Tipo de cuerpo: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): Tu clave API.
+- phone (string, requerido): Número móvil del destinatario (E.164 o local).
+      Ejemplo: +522221234567
+- name (string, requerido): Nombre del contacto.
+- groups (string, requerido): Lista de IDs de grupos separados por comas (obtenidos desde /get/groups)
+
+Ejemplo de petición:
+curl -X POST "<https://sms.convo.chat/api/create/contact>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "phone=RECIPIENT_PHONE_NUMBER" \
+     -F "name=CONTACT_NAME" \
+     -F "groups=GROUP_ID_LIST"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Contact has been created!",
+  "data": false
+}
+
+POST /create/group
+Descripción: Crear nuevo grupo de contactos.
+Permiso requerido: create_group
+Tipo de cuerpo: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): Tu clave API.
+- name (string, requerido): Nombre del grupo.
+
+Ejemplo de petición:
+curl -X POST "<https://sms.convo.chat/api/create/group>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "name=GROUP_NAME"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Contact group has been created!",
+  "data": false
+}
+
+=============================
+DELETE CONTACT
+=============================
+
+GET /delete/contact
+Descripción: Elimina un contacto existente.
+Permiso requerido: delete_contact
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- id (number, requerido): ID del contacto
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/contact?secret=YOUR_API_SECRET&id=CONTACT_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Contact has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE GROUP
+=============================
+
+GET /delete/group
+Descripción: Elimina un grupo de contactos.
+Permiso requerido: delete_group
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- id (number, requerido): ID del grupo
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/group?secret=YOUR_API_SECRET&id=GROUP_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Contact group has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE UNSUBSCRIBED
+=============================
+
+GET /delete/unsubscribed
+Descripción: Elimina un contacto dado de baja (unsubscribed).
+Permiso requerido: delete_unsubscribed
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- id (number, requerido): ID del contacto
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/unsubscribed?secret=YOUR_API_SECRET&id=CONTACT_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Unsubscribed contact has been deleted!",
+  "data": false
+}
+
+=============================
+GET CONTACTS
+=============================
+
+GET /get/contacts
+Descripción: Obtiene la lista de contactos guardados.
+Permiso requerido: get_contacts
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- limit (number, opcional, default 10): Límite de resultados por página
+- page (number, opcional, default 1): Número de página para paginación
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/contacts?secret=YOUR_API_SECRET&limit=10&page=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Saved Contacts",
+  "data": [ ... ]
+}
+
+=============================
+GET GROUPS
+=============================
+
+GET /get/groups
+Descripción: Obtiene los grupos de contactos existentes.
+Permiso requerido: get_groups
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/groups?secret=YOUR_API_SECRET&limit=10&page=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Contact Groups",
+  "data": [ ... ]
+}
+
+=============================
+GET UNSUBSCRIBED
+=============================
+
+GET /get/unsubscribed
+Descripción: Obtiene los contactos que se dieron de baja.
+Permiso requerido: get_unsubscribed
+Parámetros:
+
+- secret (string, requerido): API Secret (desde Tools → API Keys)
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/unsubscribed?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Unsubscribed Contacts",
+  "data": [ ... ]
+}
+
+=============================
+SEND OTP
+=============================
+
+POST /send/otp
+Descripción: Envía una contraseña de un solo uso (OTP).
+Permiso requerido: otp
+Tipo de cuerpo: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): API Secret
+- type (string, requerido): "sms" o "whatsapp"
+- message (string, requerido): Mensaje con {{otp}} para incluir el código
+- phone (string, requerido): Número del destinatario (E.164 o local)
+- expire (number, opcional, default 300): Expiración en segundos
+- priority (number, opcional, default 2): 1 = alta prioridad, 2 = normal
+- account (string, opcional): Solo para WhatsApp
+- mode (string, opcional): “devices” o “credits”
+- device (string, opcional): ID de dispositivo (modo devices)
+- gateway (string|number, opcional): ID del gateway (modo credits)
+- sim (number, opcional): SIM slot (solo devices)
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/otp>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "type=sms" \
+     -F "message=Your OTP is {{otp}}" \
+     -F "phone=+522221234567" \
+     -F "expire=300"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "OTP has been sent!",
+  "data": {
+    "phone": "+522221234567",
+    "message": "Your OTP is 345678",
+    "messageid": 123,
+    "otp": 345678
+  }
+}
+
+=============================
+VERIFY OTP
+=============================
+
+GET /get/otp
+Descripción: Verifica un OTP enviado.
+Permiso requerido: otp
+Parámetros:
+
+- secret (string, requerido): API Secret
+- otp (string, requerido): OTP recibido del usuario
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/otp?secret=YOUR_API_SECRET&otp=345678>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "OTP has been verified!",
+  "data": false
+}
+
+=============================
+DELETE SMS RECEIVED
+=============================
+
+GET /delete/sms.received
+Descripción: Elimina un SMS recibido.
+Permiso requerido: delete_sms_received
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID del mensaje recibido
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/sms.received?secret=YOUR_API_SECRET&id=MESSAGE_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Received SMS has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE SMS CAMPAIGN
+=============================
+
+GET /delete/sms.campaign
+Descripción: Elimina una campaña SMS.
+Permiso requerido: delete_sms_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID de la campaña
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/sms.campaign?secret=YOUR_API_SECRET&id=CAMPAIGN_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "SMS campaign has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE SENT MESSAGE
+=============================
+
+GET /delete/sms.sent
+Descripción: Elimina un mensaje SMS enviado.
+Permiso requerido: delete_sms_sent
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID del mensaje enviado
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/sms.sent?secret=YOUR_API_SECRET&id=MESSAGE_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Sent SMS has been deleted!",
+  "data": false
+}
+
+=============================
+GET PENDING MESSAGES
+=============================
+
+GET /get/sms.pending
+Descripción: Obtiene los mensajes SMS pendientes.
+Permiso requerido: get_sms_pending
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10): Límite de resultados
+- page (number, opcional, default 1): Página de resultados
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/sms.pending?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Pending SMS Messages",
+  "data": [ ... ]
+}
+
+=============================
+GET RECEIVED MESSAGES
+=============================
+
+GET /get/sms.received
+Descripción: Obtiene los SMS recibidos.
+Permiso requerido: get_sms_received
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/sms.received?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Received SMS Messages",
+  "data": [ ... ]
+}
+
+=============================
+GET SMS CAMPAIGNS
+=============================
+
+GET /get/sms.campaigns
+Descripción: Obtiene todas las campañas SMS.
+Permiso requerido: get_sms_campaigns
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/sms.campaigns?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "SMS Campaigns",
+  "data": [ ... ]
+}
+
+=============================
+GET SINGLE MESSAGE
+=============================
+
+GET /get/sms.message
+Descripción: Recupera un SMS específico por ID.
+Permisos: get_sms_sent (para sent) o get_sms_received (para received)
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (integer, requerido): ID del SMS
+- type (string, requerido): “sent” o “received”
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/sms.message?secret=YOUR_API_SECRET&id=1&type=sent>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Message was found!",
+  "data": {
+    "id": 1,
+    "mode": "credits",
+    "sender": "SMPP TEST",
+    "sender_type": "gateway",
+    "sim": 0,
+    "priority": false,
+    "api": true,
+    "status": "sent",
+    "recipient": "+522221234567",
+    "message": "hello world",
+    "created": 1732327019
+  }
+}
+
+=============================
+GET SENT MESSAGES
+=============================
+
+GET /get/sms.sent
+Descripción: Obtiene los mensajes enviados.
+Permiso requerido: get_sms_sent
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/sms.sent?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Sent SMS Messages",
+  "data": [ ... ]
+}
+
+=============================
+SEND BULK SMS
+=============================
+
+POST /send/sms.bulk
+Descripción: Envía mensajes SMS masivos.
+Permiso requerido: sms_send_bulk
+Tipo de cuerpo: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): API Secret
+- mode (string, requerido): "devices" o "credits"
+- campaign (string, requerido): Nombre de la campaña
+- numbers (string, opcional): Lista de números separados por comas
+- groups (string, opcional): IDs de grupos separados por comas
+- message (string, requerido): Texto del mensaje
+- device (string, opcional): ID del dispositivo (modo devices)
+- gateway (string|number, opcional): ID del gateway (modo credits)
+- sim (number, opcional): Slot SIM (solo devices)
+- priority (number, opcional, default 0): 0 = alta, 1 = normal, 2 = baja
+- shortener (number, opcional): ID del acortador de enlaces
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/sms.bulk>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "mode=devices" \
+     -F "campaign=Campaign_Name" \
+     -F "numbers=+522221234567,+525511223344" \
+     -F "message=Your message here"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Bulk messages have been queued for sending!",
+  "data": { "messageid": 123 }
+}
+
+=============================
+SEND SINGLE SMS
+=============================
+
+POST /send/sms
+Descripción: Envía un mensaje SMS único.
+Permiso requerido: sms_send
+Tipo de cuerpo: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): API Secret
+- mode (string, requerido): “devices” o “credits”
+- phone (string, requerido): Número destino (E.164 o local)
+- message (string, requerido): Texto del mensaje
+- device (string, opcional): ID del dispositivo (devices)
+- gateway (string|number, opcional): ID del gateway (credits)
+- sim (number, opcional): Slot SIM (solo devices)
+- priority (number, opcional, default 0): 0 = alta, 1 = normal, 2 = baja
+- shortener (number, opcional): ID del acortador de URL
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/sms>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "mode=devices" \
+     -F "phone=+522221234567" \
+     -F "message=Hello!" \
+     -F "sim=1"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Message has been queued for sending!",
+  "data": { "messageId": 123 }
+}
+
+=============================
+START SMS CAMPAIGN
+=============================
+
+GET /remote/start.sms
+Descripción: Inicia una campaña SMS existente.
+Permiso requerido: start_sms_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret
+- campaign (number, requerido): ID de la campaña
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/remote/start.sms?secret=YOUR_API_SECRET&campaign=123>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "SMS campaign has been resumed!",
+  "data": false
+}
+
+=============================
+STOP SMS CAMPAIGN
+=============================
+
+GET /remote/stop.sms
+Descripción: Detiene (pausa) una campaña SMS activa.
+Permiso requerido: stop_sms_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret
+- campaign (number, requerido): ID de la campaña
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/remote/stop.sms?secret=YOUR_API_SECRET&campaign=123>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "SMS campaign has been paused!",
+  "data": false
+}
+
+=============================
+GET GATEWAY RATES
+=============================
+
+GET /get/rates
+Descripción: Obtiene las tarifas de los gateways y partners.
+Permiso requerido: get_rates
+Parámetros:
+
+- secret (string, requerido): API Secret
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/rates?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Gateway Rates",
+  "data": {
+    "gateways": [ ... ],
+    "partners": [ ... ]
+  }
+}
+
+=============================
+DELETE RECEIVED WHATSAPP CHAT
+=============================
+
+GET /delete/wa.received
+Descripción: Elimina un chat de WhatsApp recibido.
+Permiso requerido: delete_wa_received
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID del chat recibido
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/wa.received?secret=YOUR_API_SECRET&id=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Received WhatsApp chat has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE SENT WHATSAPP CHAT
+=============================
+
+GET /delete/wa.sent
+Descripción: Elimina un chat de WhatsApp enviado.
+Permiso requerido: delete_wa_sent
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID del chat enviado
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/wa.sent?secret=YOUR_API_SECRET&id=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Sent WhatsApp chat has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE WHATSAPP ACCOUNT
+=============================
+
+GET /delete/wa.account
+Descripción: Elimina una cuenta de WhatsApp conectada.
+Permiso requerido: delete_wa_account
+Parámetros:
+
+- secret (string, requerido): API Secret
+- unique (string, requerido): WhatsApp Unique ID
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/wa.account?secret=YOUR_API_SECRET&unique=ACCOUNT_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp account has been deleted!",
+  "data": false
+}
+
+=============================
+DELETE WHATSAPP CAMPAIGN
+=============================
+
+GET /delete/wa.campaign
+Descripción: Elimina una campaña de WhatsApp.
+Permiso requerido: delete_wa_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (number, requerido): ID de la campaña
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/wa.campaign?secret=YOUR_API_SECRET&id=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp campaign has been deleted!",
+  "data": false
+}
+
+=============================
+GET WHATSAPP ACCOUNTS
+=============================
+
+GET /get/wa.accounts
+Descripción: Obtiene las cuentas de WhatsApp activas.
+Permiso requerido: get_wa_accounts
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.accounts?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp Accounts",
+  "data": [ ... ]
+}
+
+=============================
+GET PENDING WHATSAPP CHATS
+=============================
+
+GET /get/wa.pending
+Descripción: Obtiene los chats de WhatsApp pendientes.
+Permiso requerido: get_wa_pending
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.pending?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Pending WhatsApp Chats",
+  "data": [ ... ]
+}
+
+=============================
+GET RECEIVED WHATSAPP CHATS
+=============================
+
+GET /get/wa.received
+Descripción: Obtiene los chats de WhatsApp recibidos.
+Permiso requerido: get_wa_received
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.received?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Pending WhatsApp Chats",
+  "data": [ ... ]
+}
+
+=============================
+GET SINGLE WHATSAPP CHAT
+=============================
+
+GET /get/wa.message
+Descripción: Obtiene un chat de WhatsApp por ID.
+Permisos: get_wa_sent (para sent) o get_wa_received (para received)
+Parámetros:
+
+- secret (string, requerido): API Secret
+- id (integer, requerido): ID del mensaje
+- type (string, requerido): "sent" o "received"
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.message?secret=YOUR_API_SECRET&id=2&type=sent>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Message was found!",
+  "data": {
+    "id": 2,
+    "account": "+522221234567",
+    "status": "sent",
+    "api": false,
+    "recipient": "+522221234567",
+    "message": "hello hello",
+    "attachment": false,
+    "created": 1716685713
+  }
+}
+
+=============================
+GET SENT WHATSAPP CHATS
+=============================
+
+GET /get/wa.sent
+Descripción: Obtiene los chats de WhatsApp enviados.
+Permiso requerido: get_wa_sent
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.sent?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Sent WhatsApp Chats",
+  "data": [ ... ]
+}
+
+=============================
+GET WHATSAPP CAMPAIGNS
+=============================
+
+GET /get/wa.campaigns
+Descripción: Obtiene las campañas de WhatsApp.
+Permiso requerido: get_wa_campaigns
+Parámetros:
+
+- secret (string, requerido): API Secret
+- limit (number, opcional, default 10)
+- page (number, opcional, default 1)
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.campaigns?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp Campaigns",
+  "data": [ ... ]
+}
+
+=============================
+GET WHATSAPP GROUP CONTACTS
+=============================
+
+GET /get/wa.group.contacts
+Descripción: Obtiene los contactos de un grupo de WhatsApp.
+Permiso requerido: get_wa_groups
+Parámetros:
+
+- secret (string, requerido): API Secret
+- unique (string, requerido): WhatsApp Unique ID
+- gid (string, requerido): WhatsApp Group ID
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.group.contacts?secret=YOUR_API_SECRET&unique=ACCOUNT_ID&gid=GROUP_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp Group Contacts",
+  "data": [ ... ]
+}
+
+=============================
+GET WHATSAPP GROUPS
+=============================
+
+GET /get/wa.groups
+Descripción: Obtiene los grupos de una cuenta de WhatsApp.
+Permiso requerido: get_wa_groups
+Parámetros:
+
+- secret (string, requerido): API Secret
+- unique (string, requerido): WhatsApp Unique ID
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.groups?secret=YOUR_API_SECRET&unique=ACCOUNT_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp Groups",
+  "data": [ ... ]
+}
+
+=============================
+GET WHATSAPP QR IMAGE
+=============================
+
+GET /get/wa.qr
+Descripción: Obtiene el código QR para conectar WhatsApp.
+Permiso requerido: create_whatsapp
+Parámetros:
+
+- token (string, requerido): Token devuelto por el endpoint create_whatsapp
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.qr?token=YOUR_TOKEN_STRING>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "QR retrieved successfully"
+}
+
+=============================
+GET WHATSAPP SERVERS
+=============================
+
+GET /get/wa.servers
+Descripción: Obtiene los servidores disponibles para conexión de WhatsApp.
+Permiso requerido: create_whatsapp
+Parámetros:
+
+- secret (string, requerido): API Secret
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.servers?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp Servers",
+  "data": [ ... ]
+}
+=============================
+
+GET WHATSAPP INFO (AFTER LINKING)
+=============================
+
+GET /get/wa.info
+Descripción: Obtiene información de la cuenta de WhatsApp después de haberla vinculado.
+Permiso requerido: create_whatsapp
+Parámetros:
+
+- token (string, requerido): Token obtenido al crear el código QR de WhatsApp.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/wa.info?token=YOUR_TOKEN_STRING>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp info retrieved successfully",
+  "data": { ... }
+}
+
+=============================
+LINK WHATSAPP ACCOUNT
+=============================
+
+GET /create/wa.link
+Descripción: Vincula una cuenta de WhatsApp nueva al sistema.
+Permiso requerido: create_whatsapp
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- sid (number, opcional): ID del servidor de WhatsApp. Si no se especifica, selecciona el mejor servidor disponible automáticamente.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/create/wa.link?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp QRCode has been created!",
+  "data": {
+    "qrstring": "2QwggDzZdQwfC4VYBJQsExNnSuE6f+yGYVo+RfMyWUxJBW20DyDkykpqRi+9Spahb=",
+    "qrimageLink": "<https://sms.convo.chat/api/get/wa.qr?token=e10adc3949ba59abbe56e057f20f883e>",
+    "infoLink": "<https://sms.convo.chat/api/get/wa.info?token=e10adc3949ba59abbe56e057f20f883e>"
+  }
+}
+
+=============================
+RELINK WHATSAPP ACCOUNT
+=============================
+
+GET /create/wa.relink
+Descripción: Religa una cuenta de WhatsApp ya registrada.
+Permiso requerido: create_whatsapp
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- sid (number, opcional): ID del servidor. Si no se especifica, usará el actual o elegirá otro disponible.
+- unique (string, requerido): ID único de la cuenta de WhatsApp que deseas volver a vincular.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/create/wa.relink?secret=YOUR_API_SECRET&unique=ACCOUNT_ID>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp QRCode has been created!",
+  "data": {
+    "qrstring": "2QwggDzZdQwfC4VYBJQsExNnSuE6f+yGYVo+RfMyWUxJBW20DyDkykpqRi+9Spahb=",
+    "qrimageLink": "<https://sms.convo.chat/api/get/wa.qr?token=e10adc3949ba59abbe56e057f20f883e>"
+  }
+}
+
+=============================
+SEND BULK WHATSAPP CHATS
+=============================
+
+POST /send/whatsapp.bulk
+Descripción: Envía múltiples mensajes de WhatsApp.
+Permiso requerido: wa_send_bulk
+Tipo de contenido: application/x-www-form-urlencoded
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- account (string, requerido): ID único de la cuenta de WhatsApp.
+- campaign (string, requerido): Nombre de la campaña.
+- recipients (string): Números de teléfono o direcciones de grupo separados por comas.
+- groups (string): IDs de grupos separados por comas (si no se usa “recipients”).
+- type (string, requerido): Tipo de mensaje. Valores: "text", "media", "document".
+- message (string, requerido): Texto o caption del mensaje.
+- media_file (string<binary>): Archivo multimedia (jpg, png, mp4, mp3, ogg).
+- media_url (string): URL del archivo multimedia.
+- media_type (string): Tipo de media (image, audio, video).
+- document_file (string<binary>): Archivo de documento (pdf, doc, xlsx, etc.).
+- document_url (string): URL del documento.
+- document_name (string): Nombre del documento.
+- document_type (string): Tipo de documento (pdf, txt, xls, xlsx, doc, docx).
+- shortener (number): ID del shortener a usar.
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/whatsapp.bulk>" \
+     -H "Content-Type: application/x-www-form-urlencoded" \
+     -d "secret=YOUR_API_SECRET" \
+     -d "account=YOUR_ACCOUNT_ID" \
+     -d "campaign=YOUR_CAMPAIGN" \
+     -d "recipients=+522221234567,+522229998877" \
+     -d "type=text" \
+     -d "message=Hola desde API"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "5 chats has been queued for sending!",
+  "data": {
+    "campaignId": 123,
+    "messageIds": [ ... ]
+  }
+}
+
+=============================
+SEND SINGLE WHATSAPP CHAT
+=============================
+
+POST /send/whatsapp
+Descripción: Envía un único mensaje de WhatsApp.
+Permiso requerido: wa_send
+Tipo de contenido: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- account (string, requerido): ID único de la cuenta de WhatsApp.
+- recipient (string, requerido): Número o grupo destino (E.164 o local).
+- type (string, requerido): Tipo de mensaje ("text", "media", "document").
+- message (string, requerido): Contenido del mensaje.
+- priority (number, opcional): 1 = alta prioridad (envío inmediato), 2 = normal.
+- media_file (string<binary>): Archivo multimedia.
+- media_url (string): URL del archivo multimedia.
+- media_type (string): Tipo de media (image, audio, video).
+- document_file (string<binary>): Archivo de documento.
+- document_url (string): URL del documento.
+- document_name (string): Nombre del documento (con extensión).
+- document_type (string): Tipo del documento (pdf, txt, xls, xlsx, doc, docx).
+- shortener (number): ID del shortener para acortar enlaces.
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/whatsapp>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "account=YOUR_ACCOUNT_ID" \
+     -F "recipient=+522221234567" \
+     -F "type=text" \
+     -F "message=Hola mundo"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp chat has been sent!",
+  "data": {
+    "messageId": 123
+  }
+}
+
+=============================
+START WHATSAPP CAMPAIGN
+=============================
+
+GET /remote/start.chats
+Descripción: Inicia una campaña de WhatsApp previamente pausada.
+Permiso requerido: start_wa_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- campaign (number, requerido): ID de la campaña.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/remote/start.chats?secret=YOUR_API_SECRET&campaign=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp campaign has been resumed!",
+  "data": false
+}
+
+=============================
+STOP WHATSAPP CAMPAIGN
+=============================
+
+GET /remote/stop.chats
+Descripción: Pausa o detiene una campaña de WhatsApp activa.
+Permiso requerido: stop_wa_campaign
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- campaign (number, requerido): ID de la campaña.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/remote/stop.chats?secret=YOUR_API_SECRET&campaign=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp campaign has been paused!",
+  "data": false
+}
+
+=============================
+VALIDATE WHATSAPP PHONE
+=============================
+
+GET /validate/whatsapp
+Descripción: Valida si un número existe en WhatsApp.
+Permiso requerido: validate_wa_phone
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- unique (string, requerido): WhatsApp Unique ID.
+- phone (string, requerido): Número en formato E.164.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/validate/whatsapp?secret=YOUR_API_SECRET&unique=ACCOUNT_ID&phone=+522221234567>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "WhatsApp phone number is valid!",
+  "data": {
+    "jid": "<522221234567@s.whatsapp.net>",
+    "phone": "+522221234567"
+  }
+}
+
+=============================
+DELETE ANDROID NOTIFICATION
+=============================
+
+GET /delete/notification
+Descripción: Elimina una notificación de Android.
+Permiso requerido: delete_notification
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- id (number, requerido): ID de la notificación.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/notification?secret=YOUR_API_SECRET&id=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Notification has been deleted!",
+  "data": false
+}
+
+=============================
+GET DEVICES
+=============================
+
+GET /get/devices
+Descripción: Obtiene los dispositivos Android registrados.
+Permiso requerido: get_devices
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- limit (number, opcional): Default 10.
+- page (number, opcional): Default 1.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/devices?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Android Devices",
+  "data": [ ... ]
+}
+
+=============================
+DELETE USSD REQUEST
+=============================
+
+GET /delete/ussd
+Descripción: Elimina una solicitud USSD.
+Permiso requerido: delete_ussd
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- id (number, requerido): ID de la solicitud.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/delete/ussd?secret=YOUR_API_SECRET&id=1>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "USSD request has been deleted!",
+  "data": false
+}
+
+=============================
+GET USSD REQUESTS
+=============================
+
+GET /get/ussd
+Descripción: Obtiene las solicitudes USSD.
+Permiso requerido: get_ussd
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- limit (number, opcional): Default 10.
+- page (number, opcional): Default 1.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/ussd?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "USSD Requests",
+  "data": [ ... ]
+}
+
+=============================
+SEND USSD REQUEST
+=============================
+
+POST /send/ussd
+Descripción: Envía un código USSD a un dispositivo Android vinculado.
+Permiso requerido: ussd
+Tipo de contenido: multipart/form-data
+Parámetros:
+
+- secret (string, requerido): API Secret.
+- code (string, requerido): Código MMI (por ejemplo *123#).
+- sim (number, requerido): Número de SIM (1 o 2).
+- device (string, requerido): ID único del dispositivo.
+
+Ejemplo:
+curl -X POST "<https://sms.convo.chat/api/send/ussd>" \
+     -H "Content-Type: multipart/form-data" \
+     -F "secret=YOUR_API_SECRET" \
+     -F "code=*123#" \
+     -F "sim=1" \
+     -F "device=DEVICE_UNIQUE_ID"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "USSD request has been queued for sending!",
+  "data": false
+}
+
+=============================
+GET SHORTENERS
+=============================
+
+GET /get/shorteners
+Descripción: Obtiene los servicios de acortadores de URL disponibles.
+Permiso requerido: get_shorteners
+Parámetros:
+
+- secret (string, requerido): API Secret.
+
+Ejemplo:
+curl -X GET "<https://sms.convo.chat/api/get/shorteners?secret=YOUR_API_SECRET>" \
+     -H "Content-Type: application/json"
+
+Respuesta (200):
+{
+  "status": 200,
+  "message": "Available Shorteners",
+  "data": [ ... ]
+}

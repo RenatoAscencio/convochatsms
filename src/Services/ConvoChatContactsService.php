@@ -13,8 +13,14 @@ class ConvoChatContactsService
     protected string $baseUrl;
     protected int $timeout;
 
-    public const CONTACTS_ENDPOINT = '/api/contacts';
-    public const CONTACT_DETAIL_ENDPOINT = '/api/contacts/{id}';
+    public const CONTACTS_ENDPOINT = '/get/contacts';
+    public const CREATE_CONTACT_ENDPOINT = '/create/contact';
+    public const DELETE_CONTACT_ENDPOINT = '/delete/contact';
+    public const GROUPS_ENDPOINT = '/get/groups';
+    public const CREATE_GROUP_ENDPOINT = '/create/group';
+    public const DELETE_GROUP_ENDPOINT = '/delete/group';
+    public const UNSUBSCRIBED_ENDPOINT = '/get/unsubscribed';
+    public const DELETE_UNSUBSCRIBED_ENDPOINT = '/delete/unsubscribed';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -39,45 +45,76 @@ class ConvoChatContactsService
         return $this->makeRequest(self::CONTACTS_ENDPOINT, $data, 'GET');
     }
 
-    public function createContact(array $contactData): array
+    public function createContact(array $params): array
     {
-        $requiredParams = ['name', 'phone'];
-        $this->validateRequiredParams($contactData, $requiredParams);
+        $requiredParams = ['phone', 'name', 'groups'];
+        $this->validateRequiredParams($params, $requiredParams);
 
         $data = array_merge([
             'secret' => $this->apiKey,
-        ], $contactData);
+        ], $params);
 
-        return $this->makeRequest(self::CONTACTS_ENDPOINT, $data);
+        return $this->makeRequest(self::CREATE_CONTACT_ENDPOINT, $data);
     }
 
-    public function getContact(string $contactId): array
+    public function deleteContact(int $contactId): array
     {
-        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
-
-        return $this->makeRequest($endpoint, [
+        $data = [
             'secret' => $this->apiKey,
-        ], 'GET');
+            'id' => $contactId,
+        ];
+
+        return $this->makeRequest(self::DELETE_CONTACT_ENDPOINT, $data, 'GET');
     }
 
-    public function updateContact(string $contactId, array $contactData): array
+    public function getGroups(array $filters = []): array
     {
-        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::GROUPS_ENDPOINT, $data, 'GET');
+    }
+
+    public function createGroup(array $params): array
+    {
+        $requiredParams = ['name'];
+        $this->validateRequiredParams($params, $requiredParams);
 
         $data = array_merge([
             'secret' => $this->apiKey,
-        ], $contactData);
+        ], $params);
 
-        return $this->makeRequest($endpoint, $data, 'PUT');
+        return $this->makeRequest(self::CREATE_GROUP_ENDPOINT, $data);
     }
 
-    public function deleteContact(string $contactId): array
+    public function deleteGroup(int $groupId): array
     {
-        $endpoint = str_replace('{id}', $contactId, self::CONTACT_DETAIL_ENDPOINT);
-
-        return $this->makeRequest($endpoint, [
+        $data = [
             'secret' => $this->apiKey,
-        ], 'DELETE');
+            'id' => $groupId,
+        ];
+
+        return $this->makeRequest(self::DELETE_GROUP_ENDPOINT, $data, 'GET');
+    }
+
+    public function getUnsubscribed(array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::UNSUBSCRIBED_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteUnsubscribed(int $contactId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $contactId,
+        ];
+
+        return $this->makeRequest(self::DELETE_UNSUBSCRIBED_ENDPOINT, $data, 'GET');
     }
 
     protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array
@@ -103,7 +140,6 @@ class ConvoChatContactsService
             if (config('convochat.log_requests', false)) {
                 Log::info('ConvoChat Contacts API Request Success', [
                     'endpoint' => $endpoint,
-                    'method' => $method,
                     'response_status' => $responseData['status'] ?? 'unknown',
                     'request_time' => now(),
                     'base_url' => $this->baseUrl,
@@ -116,7 +152,6 @@ class ConvoChatContactsService
         } catch (GuzzleException $e) {
             Log::error('ConvoChat Contacts API Error', [
                 'endpoint' => $endpoint,
-                'method' => $method,
                 'error_message' => $e->getMessage(),
                 'error_code' => $e->getCode(),
                 'request_data' => array_merge($data, ['secret' => '[REDACTED]']),

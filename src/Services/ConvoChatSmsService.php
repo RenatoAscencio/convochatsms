@@ -16,15 +16,21 @@ class ConvoChatSmsService
     public const DEFAULT_MODE = 'devices';
     public const CREDITS_MODE = 'credits';
     public const SMS_ENDPOINT = '/send/sms';
-    public const SMS_SEND_ENDPOINT = '/api/sms/send';
-    public const SMS_BULK_ENDPOINT = '/api/sms/bulk';
-    public const SMS_HISTORY_ENDPOINT = '/api/sms/history';
-    public const SMS_DETAIL_ENDPOINT = '/api/sms/{id}';
-    public const SMS_DELETE_ENDPOINT = '/api/sms/{id}';
+    public const SMS_BULK_ENDPOINT = '/send/sms.bulk';
+    public const SMS_PENDING_ENDPOINT = '/get/sms.pending';
+    public const SMS_RECEIVED_ENDPOINT = '/get/sms.received';
+    public const SMS_SENT_ENDPOINT = '/get/sms.sent';
+    public const SMS_MESSAGE_ENDPOINT = '/get/sms.message';
+    public const SMS_CAMPAIGNS_ENDPOINT = '/get/sms.campaigns';
+    public const SMS_DELETE_RECEIVED_ENDPOINT = '/delete/sms.received';
+    public const SMS_DELETE_SENT_ENDPOINT = '/delete/sms.sent';
+    public const SMS_DELETE_CAMPAIGN_ENDPOINT = '/delete/sms.campaign';
+    public const SMS_START_CAMPAIGN_ENDPOINT = '/remote/start.sms';
+    public const SMS_STOP_CAMPAIGN_ENDPOINT = '/remote/stop.sms';
     public const DEVICES_ENDPOINT = '/get/devices';
     public const CREDITS_ENDPOINT = '/get/credits';
-    public const GATEWAY_RATES_ENDPOINT = '/get/gateway/rates';
-    public const SUBSCRIPTION_ENDPOINT = '/get/subscription/package';
+    public const SUBSCRIPTION_ENDPOINT = '/get/subscription';
+    public const RATES_ENDPOINT = '/get/rates';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -94,30 +100,18 @@ class ConvoChatSmsService
         ]);
     }
 
-    public function getGatewayRates(): array
+    public function getRates(): array
     {
-        return $this->makeRequest(self::GATEWAY_RATES_ENDPOINT, [
+        return $this->makeRequest(self::RATES_ENDPOINT, [
             'secret' => $this->apiKey,
-        ]);
+        ], 'GET');
     }
 
     public function getSubscription(): array
     {
         return $this->makeRequest(self::SUBSCRIPTION_ENDPOINT, [
             'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function sendSmsApi(array $params): array
-    {
-        $requiredParams = ['phone', 'message'];
-        $this->validateRequiredParams($params, $requiredParams);
-
-        $data = array_merge([
-            'secret' => $this->apiKey,
-        ], $params);
-
-        return $this->makeRequest(self::SMS_SEND_ENDPOINT, $data);
+        ], 'GET');
     }
 
     public function sendBulkSms(array $recipients, string $message, array $options = []): array
@@ -131,31 +125,101 @@ class ConvoChatSmsService
         return $this->makeRequest(self::SMS_BULK_ENDPOINT, $data);
     }
 
-    public function getSmsHistory(array $filters = []): array
+    public function getSmsPending(array $filters = []): array
     {
         $data = array_merge([
             'secret' => $this->apiKey,
         ], $filters);
 
-        return $this->makeRequest(self::SMS_HISTORY_ENDPOINT, $data);
+        return $this->makeRequest(self::SMS_PENDING_ENDPOINT, $data, 'GET');
     }
 
-    public function getSmsDetail(string $smsId): array
+    public function getSmsReceived(array $filters = []): array
     {
-        $endpoint = str_replace('{id}', $smsId, self::SMS_DETAIL_ENDPOINT);
-
-        return $this->makeRequest($endpoint, [
+        $data = array_merge([
             'secret' => $this->apiKey,
-        ]);
+        ], $filters);
+
+        return $this->makeRequest(self::SMS_RECEIVED_ENDPOINT, $data, 'GET');
     }
 
-    public function deleteSms(string $smsId): array
+    public function getSmsSent(array $filters = []): array
     {
-        $endpoint = str_replace('{id}', $smsId, self::SMS_DELETE_ENDPOINT);
-
-        return $this->makeRequest($endpoint, [
+        $data = array_merge([
             'secret' => $this->apiKey,
-        ], 'DELETE');
+        ], $filters);
+
+        return $this->makeRequest(self::SMS_SENT_ENDPOINT, $data, 'GET');
+    }
+
+    public function getSmsMessage(int $messageId, string $type): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+            'type' => $type,
+        ];
+
+        return $this->makeRequest(self::SMS_MESSAGE_ENDPOINT, $data, 'GET');
+    }
+
+    public function getSmsCampaigns(array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::SMS_CAMPAIGNS_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteSmsReceived(int $messageId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+        ];
+
+        return $this->makeRequest(self::SMS_DELETE_RECEIVED_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteSmsSent(int $messageId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+        ];
+
+        return $this->makeRequest(self::SMS_DELETE_SENT_ENDPOINT, $data, 'GET');
+    }
+
+    public function deleteSmsCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::SMS_DELETE_CAMPAIGN_ENDPOINT, $data, 'GET');
+    }
+
+    public function startSmsCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'campaign' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::SMS_START_CAMPAIGN_ENDPOINT, $data, 'GET');
+    }
+
+    public function stopSmsCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'campaign' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::SMS_STOP_CAMPAIGN_ENDPOINT, $data, 'GET');
     }
 
     protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array

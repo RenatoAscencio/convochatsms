@@ -18,17 +18,21 @@ class ConvoChatWhatsAppService
     public const DOCUMENT_TYPE = 'document';
     public const DEFAULT_PRIORITY = 2;
     public const WHATSAPP_ENDPOINT = '/send/whatsapp';
-    public const WHATSAPP_SEND_ENDPOINT = '/api/whatsapp/send';
-    public const WHATSAPP_MEDIA_ENDPOINT = '/api/whatsapp/media';
-    public const WHATSAPP_HISTORY_ENDPOINT = '/api/whatsapp/history';
-    public const WHATSAPP_DEVICES_ENDPOINT = '/api/whatsapp/devices';
-    public const WHATSAPP_CONNECT_ENDPOINT = '/api/whatsapp/connect';
-    public const WHATSAPP_DISCONNECT_ENDPOINT = '/api/whatsapp/disconnect/{id}';
-    public const WA_SERVERS_ENDPOINT = '/get/wa.servers';
-    public const WA_ACCOUNTS_ENDPOINT = '/get/wa.accounts';
-    public const WA_LINK_ENDPOINT = '/create/wa.link';
-    public const WA_RELINK_ENDPOINT = '/create/wa.relink';
-    public const WA_VALIDATE_ENDPOINT = '/get/wa.validate_number';
+    public const WHATSAPP_BULK_ENDPOINT = '/send/whatsapp.bulk';
+    public const WHATSAPP_PENDING_ENDPOINT = '/get/wa.pending';
+    public const WHATSAPP_RECEIVED_ENDPOINT = '/get/wa.received';
+    public const WHATSAPP_SENT_ENDPOINT = '/get/wa.sent';
+    public const WHATSAPP_MESSAGE_ENDPOINT = '/get/wa.message';
+    public const WHATSAPP_CAMPAIGNS_ENDPOINT = '/get/wa.campaigns';
+    public const WHATSAPP_GROUPS_ENDPOINT = '/get/wa.groups';
+    public const WHATSAPP_GROUP_CONTACTS_ENDPOINT = '/get/wa.group.contacts';
+    public const WHATSAPP_QR_ENDPOINT = '/get/wa.qr';
+    public const WHATSAPP_SERVERS_ENDPOINT = '/get/wa.servers';
+    public const WHATSAPP_ACCOUNTS_ENDPOINT = '/get/wa.accounts';
+    public const WHATSAPP_INFO_ENDPOINT = '/get/wa.info';
+    public const WHATSAPP_VALIDATE_ENDPOINT = '/validate/whatsapp';
+    public const WHATSAPP_START_CAMPAIGN_ENDPOINT = '/remote/start.chats';
+    public const WHATSAPP_STOP_CAMPAIGN_ENDPOINT = '/remote/stop.chats';
     public const DEFAULT_BASE_URL = 'https://sms.convo.chat/api';
     public const DEFAULT_TIMEOUT = 30;
 
@@ -95,105 +99,146 @@ class ConvoChatWhatsAppService
         ]);
     }
 
-    public function getWhatsAppServers(): array
+    public function sendBulkWhatsApp(array $recipients, string $message, array $options = []): array
     {
-        return $this->makeRequest(self::WA_SERVERS_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function linkWhatsAppAccount(int $serverId): array
-    {
-        return $this->makeRequest(self::WA_LINK_ENDPOINT, [
-            'secret' => $this->apiKey,
-            'sid' => $serverId,
-        ]);
-    }
-
-    public function relinkWhatsAppAccount(int $serverId, string $uniqueId): array
-    {
-        return $this->makeRequest(self::WA_RELINK_ENDPOINT, [
-            'secret' => $this->apiKey,
-            'sid' => $serverId,
-            'unique' => $uniqueId,
-        ]);
-    }
-
-    public function validateWhatsAppNumber(string $accountId, string $phone): array
-    {
-        return $this->makeRequest(self::WA_VALIDATE_ENDPOINT, [
-            'secret' => $this->apiKey,
-            'unique' => $accountId,
-            'phone' => $phone,
-        ]);
-    }
-
-    public function getWhatsAppAccounts(): array
-    {
-        return $this->makeRequest(self::WA_ACCOUNTS_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function sendWhatsAppApi(array $params): array
-    {
-        $requiredParams = ['account', 'recipient', 'message'];
-        $this->validateRequiredParams($params, $requiredParams);
-
         $data = array_merge([
             'secret' => $this->apiKey,
-        ], $params);
+            'recipients' => $recipients,
+            'message' => $message,
+        ], $options);
 
-        return $this->makeRequest(self::WHATSAPP_SEND_ENDPOINT, $data);
+        return $this->makeRequest(self::WHATSAPP_BULK_ENDPOINT, $data);
     }
 
-    public function sendWhatsAppMedia(array $params): array
-    {
-        $requiredParams = ['account', 'recipient', 'media_url', 'media_type'];
-        $this->validateRequiredParams($params, $requiredParams);
-
-        $data = array_merge([
-            'secret' => $this->apiKey,
-        ], $params);
-
-        return $this->makeRequest(self::WHATSAPP_MEDIA_ENDPOINT, $data);
-    }
-
-    public function getWhatsAppHistory(array $filters = []): array
+    public function getWhatsAppPending(array $filters = []): array
     {
         $data = array_merge([
             'secret' => $this->apiKey,
         ], $filters);
 
-        return $this->makeRequest(self::WHATSAPP_HISTORY_ENDPOINT, $data);
+        return $this->makeRequest(self::WHATSAPP_PENDING_ENDPOINT, $data, 'GET');
     }
 
-    public function getWhatsAppDevices(): array
+    public function getWhatsAppReceived(array $filters = []): array
     {
-        return $this->makeRequest(self::WHATSAPP_DEVICES_ENDPOINT, [
-            'secret' => $this->apiKey,
-        ]);
-    }
-
-    public function connectWhatsAppDevice(array $deviceData): array
-    {
-        $requiredParams = ['name', 'type'];
-        $this->validateRequiredParams($deviceData, $requiredParams);
-
         $data = array_merge([
             'secret' => $this->apiKey,
-        ], $deviceData);
+        ], $filters);
 
-        return $this->makeRequest(self::WHATSAPP_CONNECT_ENDPOINT, $data);
+        return $this->makeRequest(self::WHATSAPP_RECEIVED_ENDPOINT, $data, 'GET');
     }
 
-    public function disconnectWhatsAppDevice(string $deviceId): array
+    public function getWhatsAppSent(array $filters = []): array
     {
-        $endpoint = str_replace('{id}', $deviceId, self::WHATSAPP_DISCONNECT_ENDPOINT);
-
-        return $this->makeRequest($endpoint, [
+        $data = array_merge([
             'secret' => $this->apiKey,
-        ], 'DELETE');
+        ], $filters);
+
+        return $this->makeRequest(self::WHATSAPP_SENT_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppMessage(int $messageId, string $type): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'id' => $messageId,
+            'type' => $type,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_MESSAGE_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppCampaigns(array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::WHATSAPP_CAMPAIGNS_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppGroups(array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+        ], $filters);
+
+        return $this->makeRequest(self::WHATSAPP_GROUPS_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppGroupContacts(string $groupId, array $filters = []): array
+    {
+        $data = array_merge([
+            'secret' => $this->apiKey,
+            'group' => $groupId,
+        ], $filters);
+
+        return $this->makeRequest(self::WHATSAPP_GROUP_CONTACTS_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppQr(string $accountId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'unique' => $accountId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_QR_ENDPOINT, $data, 'GET');
+    }
+
+    public function getWhatsAppServers(): array
+    {
+        return $this->makeRequest(self::WHATSAPP_SERVERS_ENDPOINT, [
+            'secret' => $this->apiKey,
+        ], 'GET');
+    }
+
+    public function getWhatsAppAccounts(): array
+    {
+        return $this->makeRequest(self::WHATSAPP_ACCOUNTS_ENDPOINT, [
+            'secret' => $this->apiKey,
+        ], 'GET');
+    }
+
+    public function getWhatsAppInfo(string $accountId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'unique' => $accountId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_INFO_ENDPOINT, $data, 'GET');
+    }
+
+    public function validateWhatsAppNumber(string $accountId, string $phone): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'unique' => $accountId,
+            'phone' => $phone,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_VALIDATE_ENDPOINT, $data, 'GET');
+    }
+
+    public function startWhatsAppCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'campaign' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_START_CAMPAIGN_ENDPOINT, $data, 'GET');
+    }
+
+    public function stopWhatsAppCampaign(int $campaignId): array
+    {
+        $data = [
+            'secret' => $this->apiKey,
+            'campaign' => $campaignId,
+        ];
+
+        return $this->makeRequest(self::WHATSAPP_STOP_CAMPAIGN_ENDPOINT, $data, 'GET');
     }
 
     protected function makeRequest(string $endpoint, array $data, string $method = 'POST'): array

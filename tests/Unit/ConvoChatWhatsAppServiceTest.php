@@ -156,30 +156,6 @@ class ConvoChatWhatsAppServiceTest extends TestCase
         $this->assertCount(2, $result['servers']);
     }
 
-    public function testItCanLinkWhatsappAccount()
-    {
-        $mock = new MockHandler([
-            new Response(200, [], json_encode([
-                'status' => 'success',
-                'token' => 'abc123',
-                'qr_code' => 'data:image/png;base64,iVBOR...',
-            ])),
-        ]);
-
-        $handlerStack = HandlerStack::create($mock);
-        $client = new Client(['handler' => $handlerStack]);
-
-        $reflection = new \ReflectionClass($this->whatsappService);
-        $clientProperty = $reflection->getProperty('client');
-        $clientProperty->setAccessible(true);
-        $clientProperty->setValue($this->whatsappService, $client);
-
-        $result = $this->whatsappService->linkWhatsAppAccount(1);
-
-        $this->assertEquals('success', $result['status']);
-        $this->assertArrayHasKey('token', $result);
-        $this->assertArrayHasKey('qr_code', $result);
-    }
 
     public function testItCanValidateWhatsappNumber()
     {
