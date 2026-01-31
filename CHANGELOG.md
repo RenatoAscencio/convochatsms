@@ -10,12 +10,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Planned
 
 - Laravel Notifications channel
-- Queue job support for bulk messaging
 - Template system
 - Webhook handling
-- Artisan commands
 - Analytics and metrics
 - Multi-tenant support
+
+---
+
+## [4.0.0] - 2026-01-31
+
+### Security
+
+- Fixed API secret override vulnerability in all 5 services — user-supplied params can no longer overwrite the `secret` key
+- Removed infinite re-dispatch loop in `SendBulkSmsJob` that could spawn unlimited jobs on failure
+- Resolved 3 CVEs in dev dependencies via `composer update --dev`
+
+### Changed
+
+- **BREAKING:** Removed `ConvoChatCache` and `RateLimiter` classes (unused dead code)
+- **BREAKING:** All services now extend `BaseConvoChatService` with constructor signature `(?Client $client = null, ?array $config = null)` — existing Facade/DI usage is unaffected
+- Replaced anonymous class in ServiceProvider with typed `ConvoChatManager`
+- Replaced `empty()` with strict `=== ''` in `validateRequiredParams` to accept `0` and `"0"` as valid values
+- Fixed `getGatewayRates()` call in Artisan command (now `getRates()`)
+- Laravel version badge updated to reflect supported versions (10, 11, 12)
+
+### Added
+
+- `BaseConvoChatService` abstract class eliminating ~370 lines of duplication
+- `ConvoChatManager` typed class for Facade resolution
+- Unit tests for OTP, USSD, and Contacts services (+23 tests, total 64)
+- Regression test for secret override vulnerability
+- `.env.example` with all `CONVOCHAT_*` variables
+- Code coverage CI job (Xdebug, clover + text)
+- Dependabot for composer and GitHub Actions (weekly)
+- Composer scripts: `test`, `analyse`, `format`, `format:check`, `quality`
+- `docs/CONFIGURATION.md`, `docs/TESTING.md`, `docs/UPGRADE.md`
+- Consumer smoke test (`ConsumerSmokeTest.php`)
+
+### Fixed
+
+- PHPStan suppressions reduced from 9 to 1 (`missingType.iterableValue`)
+- Console command included in PHPStan analysis (8 errors fixed)
+- Added return types to all Console command methods
+- Added return type to Facade `getFacadeAccessor()`
+- PHPStan CI step now uses `--memory-limit=512M`
+- `actions/cache` upgraded from v3 to v4
 
 ---
 
