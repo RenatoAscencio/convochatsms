@@ -17,7 +17,7 @@ class TestConvoChatCommand extends Command
 
     protected $description = 'Test ConvoChat SMS and WhatsApp functionality';
 
-    public function handle()
+    public function handle(): int
     {
         $this->info('🚀 ConvoChat Laravel Gateway Test Tool');
         $this->info('=====================================');
@@ -52,7 +52,7 @@ class TestConvoChatCommand extends Command
         return 0;
     }
 
-    protected function testConfiguration()
+    protected function testConfiguration(): void
     {
         $this->info('🔧 Testing Configuration...');
 
@@ -76,7 +76,7 @@ class TestConvoChatCommand extends Command
         $this->newLine();
     }
 
-    protected function testSmsInfo()
+    protected function testSmsInfo(): void
     {
         $this->info('📱 Testing SMS Information...');
 
@@ -101,7 +101,7 @@ class TestConvoChatCommand extends Command
             }
 
             // Test gateway rates
-            $rates = ConvoChat::sms()->getGatewayRates();
+            $rates = ConvoChat::sms()->getRates();
             if (isset($rates['rates'])) {
                 $this->info('💸 Gateway rates available: ' . count($rates['rates']) . ' gateways');
             } else {
@@ -115,7 +115,7 @@ class TestConvoChatCommand extends Command
         $this->newLine();
     }
 
-    protected function testWhatsAppInfo()
+    protected function testWhatsAppInfo(): void
     {
         $this->info('📞 Testing WhatsApp Information...');
 
@@ -146,9 +146,11 @@ class TestConvoChatCommand extends Command
         $this->newLine();
     }
 
-    protected function testSms()
+    protected function testSms(): void
     {
+        /** @var string|null $phone */
         $phone = $this->option('phone');
+        /** @var string|null $device */
         $device = $this->option('device');
 
         if (! $phone) {
@@ -191,7 +193,7 @@ class TestConvoChatCommand extends Command
         }
     }
 
-    protected function testWhatsApp()
+    protected function testWhatsApp(): void
     {
         $phone = $this->option('phone');
         $account = $this->option('account');

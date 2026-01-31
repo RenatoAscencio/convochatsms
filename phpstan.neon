@@ -7,5 +7,4 @@ parameters:
         - identifier: missingType.iterableValue
     excludePaths:
         - vendor
-        - src/Console
     reportUnmatchedIgnoredErrors: true
