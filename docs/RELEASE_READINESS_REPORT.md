@@ -8,7 +8,7 @@
 
 | Metric | Status |
 |--------|--------|
-| Tests | 64 pass, 146 assertions |
+| Tests | 70 pass, 166 assertions |
 | PHPStan level 8 | 0 errors, 1 suppression (`missingType.iterableValue`) |
 | PHP CS Fixer | 0 violations |
 | `composer audit` | 0 vulnerabilities |
@@ -37,10 +37,13 @@
 - **B-20:** Included `Console/` in PHPStan, fixed 8 errors
 
 ### FASE 4 (Release-Ready)
+- Fixed `empty()` validation bug (now strict `=== ''`)
+- Added return type to Facade `getFacadeAccessor()`
 - Fixed Laravel version badge (removed Laravel 9)
 - Created `docs/CONFIGURATION.md`, `docs/TESTING.md`
 - Updated `CHANGELOG.md` for v4.0.0
 - Created `docs/UPGRADE.md` with migration guide
+- Created `docs/RELEASE_NOTES.md`
 - Added consumer smoke test (`tests/Feature/ConsumerSmokeTest.php`)
 
 ## Version Decision
