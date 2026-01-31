@@ -3,17 +3,12 @@ parameters:
     paths:
         - src
     ignoreErrors:
-        - '#Call to an undefined method Illuminate\\Contracts\\Foundation\\Application::#'
+        # API wrapper returns untyped arrays from JSON decode — response shape is unknown
         - identifier: missingType.iterableValue
-        - identifier: missingType.generics
-        - '#Parameter \#1 \$app of method.*__construct\(\) has no type specified#'
-        - '#Property.*\$app has no type specified#'
-        - '#Method.*__construct\(\) has parameter \$app with no type specified#'
-        - '#Cannot access property \$tries on.*#'
-        - '#Cannot access property \$backoff on.*#'
-        - '#Method.*warmUp\(\) should return.*but returns mixed#'
-        - '#Callback expects.*but.*given#'
+        # Anonymous class in ServiceProvider — will be extracted to ConvoChatManager (B-12)
+        - '#Property class@anonymous.*\$app has no type specified#'
+        - '#Method class@anonymous.*__construct\(\) has parameter \$app with no type specified#'
     excludePaths:
         - vendor
         - src/Console
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
