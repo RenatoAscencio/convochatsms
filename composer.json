@@ -51,6 +51,17 @@
             }
         }
     },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "analyse": "vendor/bin/phpstan analyse --memory-limit=512M",
+        "format": "vendor/bin/php-cs-fixer fix",
+        "format:check": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "quality": [
+            "@test",
+            "@analyse",
+            "@format:check"
+        ]
+    },
     "minimum-stability": "stable",
     "prefer-stable": true,
     "config": {
