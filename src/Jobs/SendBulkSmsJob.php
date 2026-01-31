@@ -59,12 +59,6 @@ class SendBulkSmsJob implements ShouldQueue
 
             } catch (\Exception $e) {
                 Log::error("SMS job failed for {$phone}: " . $e->getMessage());
-
-                // Re-encolar mensaje fallido
-                if ($this->attempts() < $this->tries) {
-                    self::dispatch([$phone], $this->message, $this->options)
-                        ->delay(now()->addMinutes(5));
-                }
             }
         }
     }
