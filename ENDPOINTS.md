@@ -44,8 +44,8 @@
 | `/get/wa.info`           | GET    | Información de cuenta      | `unique`                                  |
 | `/validate/whatsapp`     | GET    | Validar número             | `unique`, `phone`                         |
 | `/remote/start.chats`    | GET    | Iniciar campaña            | `campaign`                                |
-| `/remote/stop.chats`      | GET    | Detener campaña            | `campaign`                                |
-| `/get/subscription`       | GET    | Suscripción WhatsApp       | -                                         |
+| `/remote/stop.chats`     | GET    | Detener campaña            | `campaign`                                |
+| `/get/subscription`      | GET    | Suscripción WhatsApp       | -                                         |
 | `/create/wa.link`        | GET    | Vincular cuenta WhatsApp   | `sid` (opcional)                          |
 | `/create/wa.relink`      | GET    | Re-vincular cuenta         | `unique`, `sid` (opcional)                |
 | `/delete/wa.received`    | GET    | Eliminar mensaje recibido  | `id`                                      |
@@ -75,11 +75,11 @@
 
 ### 📡 USSD Endpoints
 
-| Endpoint      | Método | Descripción              | Parámetros Requeridos      |
-| ------------- | ------ | ------------------------ | -------------------------- |
-| `/send/ussd`  | POST   | Enviar código USSD        | `code`, `sim`, `device`    |
-| `/get/ussd`   | GET    | Obtener solicitudes USSD | -                          |
-| `/delete/ussd`| GET    | Eliminar solicitud USSD  | `id`                       |
+| Endpoint       | Método | Descripción              | Parámetros Requeridos   |
+| -------------- | ------ | ------------------------ | ----------------------- |
+| `/send/ussd`   | POST   | Enviar código USSD       | `code`, `sim`, `device` |
+| `/get/ussd`    | GET    | Obtener solicitudes USSD | -                       |
+| `/delete/ussd` | GET    | Eliminar solicitud USSD  | `id`                    |
 
 ## 🔧 Ejemplos Detallados por Endpoint
 
