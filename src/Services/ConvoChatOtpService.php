@@ -35,9 +35,9 @@ class ConvoChatOtpService
         $requiredParams = ['type', 'message', 'phone'];
         $this->validateRequiredParams($params, $requiredParams);
 
-        $data = array_merge([
+        $data = array_merge($params, [
             'secret' => $this->apiKey,
-        ], $params);
+        ]);
 
         return $this->makeRequest(self::SEND_OTP_ENDPOINT, $data);
     }

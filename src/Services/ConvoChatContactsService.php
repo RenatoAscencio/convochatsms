@@ -38,9 +38,9 @@ class ConvoChatContactsService
 
     public function getContacts(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::CONTACTS_ENDPOINT, $data, 'GET');
     }
@@ -50,9 +50,9 @@ class ConvoChatContactsService
         $requiredParams = ['phone', 'name', 'groups'];
         $this->validateRequiredParams($params, $requiredParams);
 
-        $data = array_merge([
+        $data = array_merge($params, [
             'secret' => $this->apiKey,
-        ], $params);
+        ]);
 
         return $this->makeRequest(self::CREATE_CONTACT_ENDPOINT, $data);
     }
@@ -69,9 +69,9 @@ class ConvoChatContactsService
 
     public function getGroups(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::GROUPS_ENDPOINT, $data, 'GET');
     }
@@ -81,9 +81,9 @@ class ConvoChatContactsService
         $requiredParams = ['name'];
         $this->validateRequiredParams($params, $requiredParams);
 
-        $data = array_merge([
+        $data = array_merge($params, [
             'secret' => $this->apiKey,
-        ], $params);
+        ]);
 
         return $this->makeRequest(self::CREATE_GROUP_ENDPOINT, $data);
     }
@@ -100,9 +100,9 @@ class ConvoChatContactsService
 
     public function getUnsubscribed(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::UNSUBSCRIBED_ENDPOINT, $data, 'GET');
     }

@@ -53,10 +53,10 @@ class ConvoChatSmsService
         $requiredParams = ['phone', 'message'];
         $this->validateRequiredParams($params, $requiredParams);
 
-        $data = array_merge([
+        $data = array_merge($params, [
             'secret' => $this->apiKey,
             'mode' => $params['mode'] ?? self::DEFAULT_MODE,
-        ], $params);
+        ]);
 
         return $this->makeRequest(self::SMS_ENDPOINT, $data);
     }
@@ -122,38 +122,38 @@ class ConvoChatSmsService
 
     public function sendBulkSms(array $recipients, string $message, array $options = []): array
     {
-        $data = array_merge([
+        $data = array_merge($options, [
             'secret' => $this->apiKey,
             'recipients' => $recipients,
             'message' => $message,
-        ], $options);
+        ]);
 
         return $this->makeRequest(self::SMS_BULK_ENDPOINT, $data);
     }
 
     public function getSmsPending(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::SMS_PENDING_ENDPOINT, $data, 'GET');
     }
 
     public function getSmsReceived(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::SMS_RECEIVED_ENDPOINT, $data, 'GET');
     }
 
     public function getSmsSent(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::SMS_SENT_ENDPOINT, $data, 'GET');
     }
@@ -171,9 +171,9 @@ class ConvoChatSmsService
 
     public function getSmsCampaigns(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::SMS_CAMPAIGNS_ENDPOINT, $data, 'GET');
     }

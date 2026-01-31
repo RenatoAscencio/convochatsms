@@ -60,10 +60,10 @@ class ConvoChatWhatsAppService
         $requiredParams = ['account', 'recipient', 'message'];
         $this->validateRequiredParams($params, $requiredParams);
 
-        $data = array_merge([
+        $data = array_merge($params, [
             'secret' => $this->apiKey,
-            'type' => self::DEFAULT_TYPE,
-        ], $params);
+            'type' => $params['type'] ?? self::DEFAULT_TYPE,
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_ENDPOINT, $data);
     }
@@ -108,38 +108,38 @@ class ConvoChatWhatsAppService
 
     public function sendBulkWhatsApp(array $recipients, string $message, array $options = []): array
     {
-        $data = array_merge([
+        $data = array_merge($options, [
             'secret' => $this->apiKey,
             'recipients' => $recipients,
             'message' => $message,
-        ], $options);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_BULK_ENDPOINT, $data);
     }
 
     public function getWhatsAppPending(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_PENDING_ENDPOINT, $data, 'GET');
     }
 
     public function getWhatsAppReceived(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_RECEIVED_ENDPOINT, $data, 'GET');
     }
 
     public function getWhatsAppSent(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_SENT_ENDPOINT, $data, 'GET');
     }
@@ -157,18 +157,18 @@ class ConvoChatWhatsAppService
 
     public function getWhatsAppCampaigns(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_CAMPAIGNS_ENDPOINT, $data, 'GET');
     }
 
     public function getWhatsAppGroups(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::WHATSAPP_GROUPS_ENDPOINT, $data, 'GET');
     }

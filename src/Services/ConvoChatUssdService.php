@@ -48,9 +48,9 @@ class ConvoChatUssdService
 
     public function getUssdRequests(array $filters = []): array
     {
-        $data = array_merge([
+        $data = array_merge($filters, [
             'secret' => $this->apiKey,
-        ], $filters);
+        ]);
 
         return $this->makeRequest(self::USSD_GET_ENDPOINT, $data, 'GET');
     }

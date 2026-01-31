@@ -7,6 +7,7 @@ use ConvoChat\LaravelSmsGateway\Tests\TestCase;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
 use GuzzleHttp\Psr7\Response;
 
 class ConvoChatSmsServiceTest extends TestCase
@@ -143,6 +144,40 @@ class ConvoChatSmsServiceTest extends TestCase
 
         $this->assertEquals('success', $result['status']);
         $this->assertEquals(100, $result['credits']);
+    }
+
+    public function testSecretCannotBeOverriddenByUserParams()
+    {
+        $history = [];
+        $historyMiddleware = Middleware::history($history);
+
+        $mock = new MockHandler([
+            new Response(200, [], json_encode([
+                'status' => 'success',
+                'message' => 'SMS sent',
+            ])),
+        ]);
+
+        $handlerStack = HandlerStack::create($mock);
+        $handlerStack->push($historyMiddleware);
+        $client = new Client(['handler' => $handlerStack]);
+
+        $service = new ConvoChatSmsService($client, [
+            'api_key' => 'real_secret_key',
+            'base_url' => 'https://sms.convo.chat/api',
+            'timeout' => 30,
+        ]);
+
+        // Attempt to override secret via params
+        $service->sendSms([
+            'phone' => '+573001234567',
+            'message' => 'Test',
+            'secret' => 'malicious_key',
+        ]);
+
+        $requestBody = json_decode($history[0]['request']->getBody()->getContents(), true);
+        $this->assertEquals('real_secret_key', $requestBody['secret']);
+        $this->assertNotEquals('malicious_key', $requestBody['secret']);
     }
 
     public function testItHandlesApiErrorsGracefully()
