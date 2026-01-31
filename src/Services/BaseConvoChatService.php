@@ -80,7 +80,7 @@ abstract class BaseConvoChatService
     protected function validateRequiredParams(array $params, array $required): void
     {
         foreach ($required as $param) {
-            if (! isset($params[$param]) || empty($params[$param])) {
+            if (! isset($params[$param]) || (is_string($params[$param]) && $params[$param] === '')) {
                 throw new \InvalidArgumentException("Missing required parameter: {$param}");
             }
         }
