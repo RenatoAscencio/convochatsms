@@ -5,9 +5,6 @@ parameters:
     ignoreErrors:
         # API wrapper returns untyped arrays from JSON decode — response shape is unknown
         - identifier: missingType.iterableValue
-        # Anonymous class in ServiceProvider — will be extracted to ConvoChatManager (B-12)
-        - '#Property class@anonymous.*\$app has no type specified#'
-        - '#Method class@anonymous.*__construct\(\) has parameter \$app with no type specified#'
     excludePaths:
         - vendor
         - src/Console

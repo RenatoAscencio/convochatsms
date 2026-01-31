@@ -11,11 +11,10 @@ use Illuminate\Support\ServiceProvider;
 
 class ConvoChatServiceProvider extends ServiceProvider
 {
-    public function register()
+    public function register(): void
     {
         $this->mergeConfigFrom(__DIR__ . '/../config/convochat.php', 'convochat');
 
-        // Registrar todos los servicios
         $this->app->singleton('convochat.sms', function () {
             return new ConvoChatSmsService();
         });
@@ -37,39 +36,7 @@ class ConvoChatServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('convochat', function ($app) {
-            return new class ($app) {
-                protected $app;
-
-                public function __construct($app)
-                {
-                    $this->app = $app;
-                }
-
-                public function sms(): ConvoChatSmsService
-                {
-                    return $this->app['convochat.sms'];
-                }
-
-                public function whatsapp(): ConvoChatWhatsAppService
-                {
-                    return $this->app['convochat.whatsapp'];
-                }
-
-                public function contacts(): ConvoChatContactsService
-                {
-                    return $this->app['convochat.contacts'];
-                }
-
-                public function otp(): ConvoChatOtpService
-                {
-                    return $this->app['convochat.otp'];
-                }
-
-                public function ussd(): ConvoChatUssdService
-                {
-                    return $this->app['convochat.ussd'];
-                }
-            };
+            return new ConvoChatManager($app);
         });
     }
 
@@ -86,7 +53,8 @@ class ConvoChatServiceProvider extends ServiceProvider
         }
     }
 
-    public function provides()
+    /** @return array<int, string> */
+    public function provides(): array
     {
         return [
             'convochat',
